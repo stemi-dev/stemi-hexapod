@@ -81,6 +81,7 @@ For additional information please check http://www.stemi.education.
 
 #define BATCH_SERVICE_UUID "651707bb-61f7-4338-b5a9-c36e02c8e2f1"
 #define BATCH_CHARACTERISTIC_UUID "da86113b-ae65-472e-ac2e-ad7d8a00feac"
+#define ACTION_NAME_CHARACTERISTIC_UUID "acf4610b-f162-45e2-9cac-cd6ca32b9488"
 
 class BluetoothLowEnergy {
 public:

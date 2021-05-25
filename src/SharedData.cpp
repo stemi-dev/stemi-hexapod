@@ -35,10 +35,11 @@ For additional information please check http://www.stemi.education.
 
 
 #include "SharedData.h"
+#include "Server.h"
 
 SharedData:: SharedData()
 {
-	Serial.begin(115200);
+	Serial.begin(9600);
 
 	moveCtrl.linearVelocity = 0;
 	moveCtrl.direction = PI / 2;
@@ -428,4 +429,11 @@ void SharedData::storeName(std::string nameNew)
 {
 	names.store(nameNew);
 	name = nameNew;
+}
+
+void SharedData::startAction(std::string actionName)
+{
+	if (actionName == "ota") {
+		startOtaServer();
+	}
 }
