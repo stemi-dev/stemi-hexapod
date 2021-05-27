@@ -4,11 +4,9 @@
 #include <ESPAsyncWebServer.h>
 #include <AsyncElegantOTA.h>
 #include <Preferences.h>
+#include "SharedData.h"
 
 Preferences preferencesMain;
-
-const char* ssid = "StemiHexapodWIFI";
-const char* password = "";
 
 AsyncWebServer server(80);
 
@@ -16,6 +14,17 @@ bool begin = false;
 int byteCounter = 0;
 
 void initServer() {
+    robot.loadName();
+    char ssid[50] = "STEMI Hexapod ";
+	  char nameDummy[20];
+	  strcpy(nameDummy, robot.name.c_str());
+    for (int i = 0; true; i++) {
+        ssid[14 + i] = nameDummy[i];
+        if (nameDummy[i] == '\0') {
+          break;
+        }
+    }
+    const char* password = "";
     delay(10);
     Serial.println("Configuring access point...");
     WiFi.mode(WIFI_AP_STA);
