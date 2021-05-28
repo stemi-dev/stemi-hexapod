@@ -40,6 +40,7 @@ For additional information please check http://www.stemi.education.
 #include <BLE2904.h>
 #include "BluetoothLowEnergy.h"
 #include "SharedData.h"
+#include "esp_ota_ops.h"
 
 class int8Callback : public BLECharacteristicCallbacks {
 private:
