@@ -84,6 +84,10 @@ For additional information please check http://www.stemi.education.
 #define ACTION_NAME_CHARACTERISTIC_UUID "acf4610b-f162-45e2-9cac-cd6ca32b9488"
 #define OTA_CHARACTERISTIC_UUID "9c2f0ede-7162-4504-8ecf-e0a2357d20f5"
 
+// BleOta
+#define FULL_PACKET 512
+#define CHARPOS_UPDATE_FLAG 5
+
 class BluetoothLowEnergy {
 public:
 	BluetoothLowEnergy(std::string deviceName);

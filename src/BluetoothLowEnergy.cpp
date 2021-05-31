@@ -38,6 +38,7 @@ For additional information please check http://www.stemi.education.
 #include <BLEUtils.h>
 #include <BLEServer.h>
 #include <BLE2904.h>
+#include <BLE2902.h>
 #include "BluetoothLowEnergy.h"
 #include "SharedData.h"
 #include "esp_ota_ops.h"
@@ -129,6 +130,47 @@ public:
 		*data = int16_t(pCharacteristic->getValue().c_str()[0]) + int16_t(pCharacteristic->getValue().c_str()[1] << 8);
 	}
 };
+
+class otaCallback : public BLECharacteristicCallbacks {
+private:
+	esp_ota_handle_t otaHandler = 0;
+	bool updateFlag = false;
+	bool readyFlag = false;
+	int bytesReceived = 0;
+	int timesWritten = 0;
+public:
+	otaCallback() {
+	}
+	void onWrite(BLECharacteristic* pCharacteristic) {
+		std::string rxData = pCharacteristic->getValue();
+		if (!updateFlag) { //If it's the first packet of OTA since bootup, begin OTA
+			Serial.println("BeginOTA");
+			esp_ota_begin(esp_ota_get_next_update_partition(NULL), OTA_SIZE_UNKNOWN, &otaHandler);
+			updateFlag = true;
+		}
+		if (rxData.length() > 0)
+		{
+			esp_ota_write(otaHandler, rxData.c_str(), rxData.length());
+			if (rxData.length() != FULL_PACKET)
+			{
+				esp_ota_end(otaHandler);
+				Serial.println("EndOTA");
+				if (ESP_OK == esp_ota_set_boot_partition(esp_ota_get_next_update_partition(NULL))) {
+				delay(2000);
+				esp_restart();
+				}
+				else {
+				Serial.println("Upload Error");
+				}
+			}
+		}
+
+		uint8_t txData[5] = {1, 2, 3, 4, 5};
+		pCharacteristic->setValue((uint8_t*)txData, 5);
+		pCharacteristic->notify();
+	}
+};
+
 
 
 BluetoothLowEnergy::BluetoothLowEnergy(std::string deviceName) {
@@ -454,6 +496,14 @@ void BluetoothLowEnergy::createBatchMovementServiceWithCharacteristic() {
 		ACTION_NAME_CHARACTERISTIC_UUID,
         BLECharacteristic::PROPERTY_WRITE |
         BLECharacteristic::PROPERTY_INDICATE);
+
+	BLECharacteristic* pOtaCharacteristic = batchService->createCharacteristic(
+        OTA_CHARACTERISTIC_UUID,
+        BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_WRITE
+    );
+
+  	pOtaCharacteristic->addDescriptor(new BLEDescriptor((uint16_t)0x2902));
+  	pOtaCharacteristic->setCallbacks(new otaCallback());
 
 	uint8_t batchCommands[22];
 	batchCharacteristic->setValue(&batchCommands[0], 22);
