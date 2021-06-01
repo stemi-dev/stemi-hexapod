@@ -66,7 +66,7 @@ void checkIsServerOn() {
 }
 
 void startOtaServer() {
- 		preferencesMain.begin("server-data", false);
+ 	preferencesMain.begin("server-data", false);
     preferencesMain.putBool("isServerOn", true);
     preferencesMain.end();
     ESP.restart();
