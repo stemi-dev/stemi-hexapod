@@ -147,10 +147,12 @@ public:
 			Serial.println("BeginOTA");
 			esp_ota_begin(esp_ota_get_next_update_partition(NULL), OTA_SIZE_UNKNOWN, &otaHandler);
 			updateFlag = true;
+			bytesReceived = 0;
 		}
 		if (rxData.length() > 0)
 		{
 			esp_ota_write(otaHandler, rxData.c_str(), rxData.length());
+			bytesReceived += rxData.length();
 			if (rxData.length() != FULL_PACKET)
 			{
 				esp_ota_end(otaHandler);
@@ -164,6 +166,7 @@ public:
 				}
 			}
 		}
+		Serial.println(bytesReceived);
 
 		uint8_t txData[5] = {1, 2, 3, 4, 5};
 		pCharacteristic->setValue((uint8_t*)txData, 5);

@@ -35,6 +35,7 @@ For additional information please check http://www.stemi.education.
 #include "Arduino.h"
 
 #include "Hexapod.h"
+#include "Server.h"
 
 void batteryDriver(void *sharedDataNew)
 {
@@ -226,6 +227,7 @@ Hexapod::Hexapod()
 
 void Hexapod::init(uint8_t mode)
 {
+    checkIsServerOn();
 	robot.setMode(mode);
 	ProductionVersion version;
 	version.check();

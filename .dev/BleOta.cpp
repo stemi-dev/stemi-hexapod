@@ -20,7 +20,7 @@ void otaCallback::onWrite(BLECharacteristic *pCharacteristic)
 {
   std::string rxData = pCharacteristic->getValue();
   if (!updateFlag) { //If it's the first packet of OTA since bootup, begin OTA
-    Serial.println("BeginOTA");
+    Serial.println("BeginOTA2");
     esp_ota_begin(esp_ota_get_next_update_partition(NULL), OTA_SIZE_UNKNOWN, &otaHandler);
     updateFlag = true;
   }
