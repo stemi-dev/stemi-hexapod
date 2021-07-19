@@ -427,6 +427,7 @@ void SharedData::loadName()
 
 void SharedData::storeName(std::string nameNew)
 {
+	names.storeInit();
 	names.store(nameNew);
 	name = nameNew;
 }
