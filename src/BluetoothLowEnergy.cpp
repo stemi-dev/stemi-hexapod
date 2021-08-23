@@ -106,6 +106,9 @@ public:
 	}
 	void onWrite(BLECharacteristic* pCharacteristic) {
 			robot.storeName(pCharacteristic->getValue());
+			char nameDummy[20];
+			strcpy(nameDummy, pCharacteristic->getValue().c_str());
+			pCharacteristic->setValue((uint8_t*)nameDummy, 20);
 	}
 };
 
@@ -313,6 +316,15 @@ void BluetoothLowEnergy::createParameterServiceWithCharacteristics() {
 	uint8_t init_data[2] = { 0, 0 };
 	char nameDummy[20];
 	strcpy(nameDummy, robot.name.c_str());
+    char robotName[50] = "";
+	int robotNameLength = 0;
+    for (int i = 0; true; i++) {
+        robotName[i] = nameDummy[i];
+		robotNameLength += 1;
+        if (nameDummy[i] == '\0') {
+          break;
+        }
+    }
 	
 	parameterService = server->createService(PARAMETER_SERVICE);
 
@@ -356,9 +368,13 @@ void BluetoothLowEnergy::createParameterServiceWithCharacteristics() {
 	BLECharacteristic* nameCharacteristic = parameterService->createCharacteristic(
 		NAME_CHARACTERISTIC_UUID,
 		BLECharacteristic::PROPERTY_READ |
-		BLECharacteristic::PROPERTY_WRITE);
+		BLECharacteristic::PROPERTY_WRITE |
+		BLECharacteristic::PROPERTY_WRITE_NR |
+		BLECharacteristic::PROPERTY_NOTIFY);
 
-	nameCharacteristic->setValue((uint8_t*)nameDummy, 20);
+	Serial.println("robotName");
+	Serial.println(robotName);
+	nameCharacteristic->setValue((uint8_t*)robotName, robotNameLength);
 	modeCharacteristic->setValue(&init_data[0], 1);
 	gaitIDCharacteristic->setValue(&init_data[0], 1);
 	universalDataCharacteristic->setValue(init_data, 1);
