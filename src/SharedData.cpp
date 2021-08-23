@@ -36,6 +36,7 @@ For additional information please check http://www.stemi.education.
 
 #include "SharedData.h"
 #include "Server.h"
+#include "esp_wifi.h"
 
 SharedData:: SharedData()
 {
@@ -430,6 +431,9 @@ void SharedData::storeName(std::string nameNew)
 	names.storeInit();
 	names.store(nameNew);
 	name = nameNew;
+	Serial.println("Change mac address");
+	uint8_t newMACAddress[] = {0x33, 0xAE, 0xA4, 0x07, 0x0D, 0x66};
+	esp_base_mac_addr_set(newMACAddress);
 }
 
 void SharedData::startAction(std::string actionName)

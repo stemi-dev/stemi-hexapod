@@ -37,10 +37,13 @@ For additional information please check http://www.stemi.education.
 SharedData robot;
 Hexapod  hexapod;
 
+uint8_t esp32_mac[6];
+
 void setup()
 {
 	Serial.begin(9600);
 	hexapod.init();
+	robot.storeName("Testing");
 	robot.setLed(RED);
 	robot.setHeight(50);
 }
