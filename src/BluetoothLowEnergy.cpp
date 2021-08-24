@@ -105,10 +105,10 @@ public:
 	robotNameCallback() {
 	}
 	void onWrite(BLECharacteristic* pCharacteristic) {
-			robot.storeName(pCharacteristic->getValue());
-			char nameDummy[20];
-			strcpy(nameDummy, pCharacteristic->getValue().c_str());
-			pCharacteristic->setValue((uint8_t*)nameDummy, 20);
+		robot.storeName(pCharacteristic->getValue());
+		char nameDummy[20];
+		strcpy(nameDummy, pCharacteristic->getValue().c_str());
+		pCharacteristic->setValue((uint8_t*)nameDummy, 20);
 	}
 };
 
@@ -173,6 +173,27 @@ public:
 
 		uint8_t txData[5] = {1, 2, 3, 4, 5};
 		pCharacteristic->setValue((uint8_t*)txData, 5);
+		pCharacteristic->notify();
+	}
+};
+
+class nameCallback : public BLECharacteristicCallbacks {
+public:
+	nameCallback() {
+	}
+	void onWrite(BLECharacteristic* pCharacteristic) {
+		char nameDummy[20];
+		strcpy(nameDummy, robot.name.c_str());
+		char robotName[50] = "";
+		int robotNameLength = 0;
+		for (int i = 0; true; i++) {
+			robotName[i] = nameDummy[i];
+			robotNameLength += 1;
+			if (nameDummy[i] == '\0') {
+			break;
+			}
+		}
+		pCharacteristic->setValue((uint8_t*)robotName, robotNameLength);
 		pCharacteristic->notify();
 	}
 };
@@ -314,17 +335,6 @@ void BluetoothLowEnergy::createPoseServiceWithCharacteristics() {
 
 void BluetoothLowEnergy::createParameterServiceWithCharacteristics() {
 	uint8_t init_data[2] = { 0, 0 };
-	char nameDummy[20];
-	strcpy(nameDummy, robot.name.c_str());
-    char robotName[50] = "";
-	int robotNameLength = 0;
-    for (int i = 0; true; i++) {
-        robotName[i] = nameDummy[i];
-		robotNameLength += 1;
-        if (nameDummy[i] == '\0') {
-          break;
-        }
-    }
 	
 	parameterService = server->createService(PARAMETER_SERVICE);
 
@@ -365,16 +375,6 @@ void BluetoothLowEnergy::createParameterServiceWithCharacteristics() {
 		BLECharacteristic::PROPERTY_READ
 	);
 
-	BLECharacteristic* nameCharacteristic = parameterService->createCharacteristic(
-		NAME_CHARACTERISTIC_UUID,
-		BLECharacteristic::PROPERTY_READ |
-		BLECharacteristic::PROPERTY_WRITE |
-		BLECharacteristic::PROPERTY_WRITE_NR |
-		BLECharacteristic::PROPERTY_NOTIFY);
-
-	Serial.println("robotName");
-	Serial.println(robotName);
-	nameCharacteristic->setValue((uint8_t*)robotName, robotNameLength);
 	modeCharacteristic->setValue(&init_data[0], 1);
 	gaitIDCharacteristic->setValue(&init_data[0], 1);
 	universalDataCharacteristic->setValue(init_data, 1);
@@ -382,7 +382,6 @@ void BluetoothLowEnergy::createParameterServiceWithCharacteristics() {
 	softwareVersionCharacteristic->setValue(robot.hexSwVersion, 3);
 	hardwareVersionCharacteristic->setValue(robot.hexHwVersion, 3);
 
-	nameCharacteristic->setCallbacks(new robotNameCallback());
 	modeCharacteristic->setCallbacks(new int8Callback(&robot.mode));
 	gaitIDCharacteristic->setCallbacks(new int8Callback(&robot.btInputData.gaitID));
 	universalDataCharacteristic->setCallbacks(new int8Callback(&robot.universalData[0]));
@@ -504,6 +503,18 @@ public:
 };
 
 void BluetoothLowEnergy::createBatchMovementServiceWithCharacteristic() {
+	char nameDummy[20];
+	strcpy(nameDummy, robot.name.c_str());
+    char robotName[50] = "";
+	int robotNameLength = 0;
+    for (int i = 0; true; i++) {
+        robotName[i] = nameDummy[i];
+		robotNameLength += 1;
+        if (nameDummy[i] == '\0') {
+          break;
+        }
+    }
+
 	batchService = server->createService(BATCH_SERVICE_UUID);
 	BLECharacteristic* batchCharacteristic = batchService->createCharacteristic(
 		BATCH_CHARACTERISTIC_UUID,
@@ -521,7 +532,17 @@ void BluetoothLowEnergy::createBatchMovementServiceWithCharacteristic() {
         BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_WRITE
     );
 
-  	pOtaCharacteristic->addDescriptor(new BLEDescriptor((uint16_t)0x2902));
+	BLECharacteristic* nameCharacteristic = batchService->createCharacteristic(
+		NAME_CHARACTERISTIC_UUID,
+		BLECharacteristic::PROPERTY_READ |
+		BLECharacteristic::PROPERTY_WRITE |
+		BLECharacteristic::PROPERTY_NOTIFY |
+        BLECharacteristic::PROPERTY_INDICATE);
+
+	nameCharacteristic->setValue((uint8_t*)robotName, robotNameLength);
+  	nameCharacteristic->setCallbacks(new nameCallback());
+
+	pOtaCharacteristic->addDescriptor(new BLEDescriptor((uint16_t)0x2902));
   	pOtaCharacteristic->setCallbacks(new otaCallback());
 
 	uint8_t batchCommands[22];
