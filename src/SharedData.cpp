@@ -440,7 +440,7 @@ void SharedData::storeName(std::string nameNew)
 		nameSumIndexed += name[i] * i;
 		nameProduct += name[i];
 	}
-	int newMACAddress[] = {
+	uint8_t newMACAddress[] = {
 		nameSum % 256,
 		nameSumIndexed % 256,
 		nameProduct % 256,
