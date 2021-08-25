@@ -58,6 +58,8 @@ uint16_t Names::sumStringMemberValues(uint8_t str[6])
 	return sum;
 }
 
+
+
 void Names::storeInit()
 {
 	preferences.begin("my-app", false);

@@ -36,6 +36,8 @@ For additional information please check http://www.stemi.education.
 
 #include "SharedData.h"
 #include "Server.h"
+#include <WiFi.h>
+#include <esp_wifi.h>
 
 SharedData:: SharedData()
 {
@@ -430,6 +432,23 @@ void SharedData::storeName(std::string nameNew)
 	names.storeInit();
 	names.store(nameNew);
 	name = nameNew;
+	int nameSum = 0;
+	int nameSumIndexed = 0;
+	int nameProduct = 1;
+	for (int i = 0; i < name.length(); i++) {
+		nameSum += name[i];
+		nameSumIndexed += name[i] * i;
+		nameProduct += name[i];
+	}
+	int newMACAddress[] = {
+		nameSum % 256,
+		nameSumIndexed % 256,
+		nameProduct % 256,
+		(nameSum/nameNew.length()) % 256,
+		(nameSumIndexed/nameNew.length()) % 256,
+		(nameProduct/nameNew.length()) % 256
+	};
+	esp_base_mac_addr_set(&newMACAddress[0]);
 }
 
 void SharedData::startAction(std::string actionName)
