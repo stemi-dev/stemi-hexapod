@@ -440,13 +440,12 @@ void SharedData::storeName(std::string nameNew)
 		nameSumIndexed += name[i] * i;
 		nameProduct += name[i];
 	}
+	
 	uint8_t newMACAddress[] = {
+		0x32, 0xAE, 0xA4,
 		nameSum % 256,
 		nameSumIndexed % 256,
 		nameProduct % 256,
-		(nameSum/nameNew.length()) % 256,
-		(nameSumIndexed/nameNew.length()) % 256,
-		(nameProduct/nameNew.length()) % 256
 	};
 	esp_base_mac_addr_set(&newMACAddress[0]);
 }
