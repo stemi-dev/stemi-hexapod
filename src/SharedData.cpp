@@ -35,7 +35,6 @@ For additional information please check http://www.stemi.education.
 
 
 #include "SharedData.h"
-#include "Server.h"
 
 SharedData:: SharedData()
 {
@@ -429,11 +428,4 @@ void SharedData::storeName(std::string nameNew)
 {
 	names.store(nameNew);
 	name = nameNew;
-}
-
-void SharedData::startAction(std::string actionName)
-{
-	if (actionName == "ota") {
-		startOtaServer();
-	}
 }

@@ -34,15 +34,12 @@ For additional information please check http://www.stemi.education.
 */
 
 #include "Hexapod.h"
-#include "Server.h"
 SharedData robot;
 Hexapod  hexapod;
 
 void setup()
 {
 	Serial.begin(9600);
-	Serial.print("ota3 test ota3");
-    checkIsServerOn();
 	hexapod.init();
 	robot.setLed(RED);
 	robot.setHeight(50);

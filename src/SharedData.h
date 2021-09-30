@@ -352,9 +352,6 @@ public:
 	void useMoveInputData(InputData * data);
 	void useLedInputData(InputData * data);
 
-	// Custom actions
-	void startAction(std::string actionName);
-
 	//UniversalData to be written from bluetooth or other sources
 	int8_t universalData[4] = { 0, 0, 0, 0, };
 

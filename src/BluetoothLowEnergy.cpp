@@ -107,16 +107,6 @@ public:
 	}
 };
 
-class robotActionNameCallback : public BLECharacteristicCallbacks {
-private:
-public:
-	robotActionNameCallback() {
-	}
-	void onWrite(BLECharacteristic* pCharacteristic) {
-			robot.startAction(pCharacteristic->getValue());
-	}
-};
-
 class int16Callback : public BLECharacteristicCallbacks {
 private:
 	int16_t* data;
@@ -448,17 +438,10 @@ void BluetoothLowEnergy::createBatchMovementServiceWithCharacteristic() {
 		BLECharacteristic::PROPERTY_READ |
 		BLECharacteristic::PROPERTY_WRITE |
 		BLECharacteristic::PROPERTY_WRITE_NR);
-	
-	BLECharacteristic* actionNameCharacteristic = batchService->createCharacteristic(
-		ACTION_NAME_CHARACTERISTIC_UUID,
-        BLECharacteristic::PROPERTY_WRITE |
-        BLECharacteristic::PROPERTY_INDICATE);
 
 	uint8_t batchCommands[22];
 	batchCharacteristic->setValue(&batchCommands[0], 22);
-	actionNameCharacteristic->setValue("");
 
 	batchCharacteristic->setCallbacks(new batchCallback(&robot));
-	actionNameCharacteristic->setCallbacks(new robotActionNameCallback());
 	batchService->start();
 }
