@@ -418,35 +418,18 @@ void SharedData::loadName()
 	names.storeInit();
 	names.load(&robot.name);
 	uint8_t mac[6];
-	if (name == "\0")
-	{
-		esp_efuse_mac_get_default(mac);
-		name = names.generateName(names.sumStringMemberValues(mac));
-		Serial.printf("Name not stored, storing \"%s\"\n",name.c_str());
-		storeName(name);
-	}
+	esp_efuse_mac_get_default(mac);
+	name = names.generateName(names.sumStringMemberValues(mac));
+	Serial.printf("Name not stored, storing \"%s\"\n",name.c_str());
+	storeName(name);
 }
 
 void SharedData::storeName(std::string nameNew)
 {
 	names.storeInit();
 	names.store(nameNew);
-	name = nameNew;
-	int nameSum = 0;
-	int nameSumIndexed = 0;
-	int nameProduct = 1;
-	for (int i = 0; i < name.length(); i++) {
-		nameSum += name[i];
-		nameSumIndexed += name[i] * i;
-		nameProduct += name[i];
-	}
-	
-	uint8_t newMACAddress[] = {
-		0x32, 0xAE, 0xA4,
-		nameSum % 256,
-		nameSumIndexed % 256,
-		nameProduct % 256,
-	};
+	uint8_t newMACAddress[6];
+	esp_efuse_mac_get_default(newMACAddress);
 	esp_base_mac_addr_set(&newMACAddress[0]);
 }
 

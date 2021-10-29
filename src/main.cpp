@@ -40,6 +40,7 @@ Hexapod  hexapod;
 void setup()
 {
 	Serial.begin(9600);
+	robot.storeName("Mirko");
 	hexapod.init();
 	robot.setLed(RED);
 	robot.setHeight(50);
