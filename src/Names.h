@@ -41,7 +41,7 @@ For additional information please check http://www.stemi.education.
 #include "Preferences.h"
 
 #define NUMBER_OF_NAMES 110
-#define NUMBER_OF_ADJECTIVES 25
+#define NUMBER_OF_ADJECTIVES 24
 
 class Names
 {
@@ -73,7 +73,6 @@ private:
 		"Small",
 		"Futuristict",
 		"Wicked",
-		"Chubby",
 		"Swift",
 		"Quick",
 		"Sweet",
