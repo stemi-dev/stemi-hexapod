@@ -256,7 +256,7 @@ void Hexapod::init(uint8_t mode)
 	xTaskCreatePinnedToCore(btEngine, "btEngine", 2 * 4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(touchDriver, "touchDriver", 2 * 4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 
-	xTaskCreatePinnedToCore(i2cDriver, "i2cDriver", 2 * 4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
+	// xTaskCreatePinnedToCore(i2cDriver, "i2cDriver", 2 * 4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 	// xTaskCreatePinnedToCore(dancingEngine, "dancingEngine", 2 * 4096, NULL, 4, NULL, ARDUINO_RUNNING_CORE);
 
 	delay(200);

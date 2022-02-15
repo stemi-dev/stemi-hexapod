@@ -34,12 +34,14 @@ For additional information please check http://www.stemi.education.
 */
 
 #include "Hexapod.h"
+#include "I2c.h"
 SharedData robot;
 Hexapod hexapod;
 
 void setup()
 {
 	Serial.begin(9600);
+	setupI2c();
 	robot.storeName("Mirko");
 	hexapod.init();
 	robot.setLed(RED);
@@ -47,4 +49,6 @@ void setup()
 
 void loop()
 {
+	loopI2c();
+	robot.i2cConnection = true;
 }
