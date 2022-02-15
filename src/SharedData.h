@@ -371,6 +371,7 @@ public:
 
 	int8_t mode = ROBOT_STANDBY_MODE;
 	uint8_t BTConnectedCount = 0;
+	bool i2cConnection = false;
 	int8_t userSlider = 0;
 	uint8_t hexSwVersion[3] = { HEXAPOD_SW_VERSION_MAJOR, HEXAPOD_SW_VERSION_MINOR, HEXAPOD_SW_VERSION_PATCH };
 	uint8_t hexHwVersion[3] = { HEXAPOD_HW_VERSION_MAJOR, HEXAPOD_HW_VERSION_MINOR, HEXAPOD_HW_VERSION_PATCH };

@@ -35,7 +35,7 @@ For additional information please check http://www.stemi.education.
 
 #include "Hexapod.h"
 SharedData robot;
-Hexapod  hexapod;
+Hexapod hexapod;
 
 void setup()
 {
@@ -43,53 +43,8 @@ void setup()
 	robot.storeName("Mirko");
 	hexapod.init();
 	robot.setLed(RED);
-	robot.setHeight(50);
-}
-
-Color clrArray[7] = {BLUE, YELLOW, GREEN, CYAN, PURPLE, RED, ORANGE};
-uint8_t clrCount = 0;
-
-
-void setLEDrandom()
-{
-	robot.setLedStatic(0, clrArray[random(0, 6)]);
-	robot.setLedStatic(1, clrArray[random(0, 6)]);
-	robot.setLedStatic(2, clrArray[random(0, 6)]);
-	robot.setLedStatic(3, clrArray[random(0, 6)]);
-	robot.setLedStatic(4, clrArray[random(0, 6)]);
-	robot.setLedStatic(5, clrArray[random(0, 6)]);
-}
-
-void setLEDSequence()
-{
-	robot.setLedStatic(clrArray[clrCount]);
-	clrCount = (clrCount + 1) % 7;
 }
 
 void loop()
 {
-	int touchPattern = robot.getTouchPattern();
-	if (touchPattern == TOUCH_00X)
-	{
-		robot.writeExtraServo(-80);
-		setLEDrandom();
-	}
-	else if (touchPattern == TOUCH_X00)
-	{
-		setLEDSequence();
-		robot.writeExtraServo(80);
-	}
-	else if (touchPattern == TOUCH_0X0)
-	{
-		robot.exitUserMode();
-	}
-	else if (touchPattern == TOUCH_0XX)
-	{
-		robot.move(FORWARD,2000);
-	}
-	else if (touchPattern == TOUCH_XX0)
-	{
-		robot.move(BACKWARD,2000);
-	}
-	delay(20);
 }

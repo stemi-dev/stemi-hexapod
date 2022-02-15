@@ -185,7 +185,7 @@ void RobotEngine::modesGO()
 	switch (robotMode)
 	{
 	case ROBOT_STANDBY_MODE:
-		if (robot.BTConnectedCount)
+		if (robot.BTConnectedCount || robot.i2cConnection)
 		{
 			robot.useLedInputData(&robot.btInputData);
 		}
@@ -201,7 +201,7 @@ void RobotEngine::modesGO()
 
 	case ROBOT_WALK_MODE:
 		//set up walking parameters
-		if (robot.BTConnectedCount)
+		if (robot.BTConnectedCount || robot.i2cConnection)
 		{
 			robot.useMoveInputData(&robot.btInputData);
 			robot.useLedInputData(&robot.btInputData);
