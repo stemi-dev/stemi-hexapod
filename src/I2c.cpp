@@ -9,10 +9,11 @@
 #define SCL_PIN 22
 #define I2C_SLAVE_ADDR 0x60
 
-bool is_master = true;
+bool is_master = false;
 bool is_setup = false;
 
 #define MAX_SLAVE_RESPONSE_LENGTH 32
+
 
 void setupI2cMaster()
 {
@@ -25,7 +26,7 @@ static byte x = 0;
 void loopI2cMaster()
 {
 
-  delay(100);
+  delay(500);
 
   WireSlaveRequest slaveReq(Wire, I2C_SLAVE_ADDR, MAX_SLAVE_RESPONSE_LENGTH);
 
@@ -53,6 +54,7 @@ void loopI2cMaster()
         parts[partCounter] += c;
       }
     }
+    Serial.println("partCounter");
     Serial.println(partCounter);
     if (partCounter >= 1)
     {
@@ -61,6 +63,7 @@ void loopI2cMaster()
       Serial.print(key);
       Serial.print(" -> ");
       Serial.print(value);
+      Serial.println("parts[1]");
       Serial.println(parts[1]);
       robot.i2cConnection = true;
       if (key == "linearVelocity")
@@ -77,12 +80,10 @@ void loopI2cMaster()
       }
     }
     int x = slaveReq.read();
-    Serial.println(x);
   }
   else
   {
     // if something went wrong, print the reason
-    Serial.println(slaveReq.lastStatusToString());
   }
 }
 
