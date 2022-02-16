@@ -34,12 +34,33 @@ For additional information please check http://www.stemi.education.
 */
 
 #include "Hexapod.h"
+#include <SoftwareSerial.h>
 SharedData robot;
-Hexapod  hexapod;
+Hexapod hexapod;
+
+SoftwareSerial softwareSerial;
+
+bool isMain = false;
 
 void setup()
 {
 	Serial.begin(9600);
+	if (isMain)
+	{
+		softwareSerial.begin(9600, SWSERIAL_8N1, 25, 15, false);
+	}
+	else
+	{
+		softwareSerial.begin(9600, SWSERIAL_8N1, 15, 25, false);
+	}
+	if (!softwareSerial)
+	{ // If the object did not initialize, then its configuration is invalid
+		Serial.println("Invalid SoftwareSerial pin configuration, check config");
+		while (1)
+		{ // Don't continue with invalid configuration
+			delay(1000);
+		}
+	}
 	robot.storeName("Mirko");
 	hexapod.init();
 	robot.setLed(RED);
@@ -48,7 +69,6 @@ void setup()
 
 Color clrArray[7] = {BLUE, YELLOW, GREEN, CYAN, PURPLE, RED, ORANGE};
 uint8_t clrCount = 0;
-
 
 void setLEDrandom()
 {
@@ -68,28 +88,27 @@ void setLEDSequence()
 
 void loop()
 {
-	int touchPattern = robot.getTouchPattern();
-	if (touchPattern == TOUCH_00X)
+	if (isMain)
 	{
-		robot.writeExtraServo(-80);
-		setLEDrandom();
+		softwareSerial.print("#");
+		for (int i = 0; i < 10; i++)
+		{
+			softwareSerial.print(i);
+			delay(10);
+		}
+		softwareSerial.print("#");
 	}
-	else if (touchPattern == TOUCH_X00)
+	else
 	{
-		setLEDSequence();
-		robot.writeExtraServo(80);
+		if (softwareSerial.available() > 0)
+		{
+			String msg = "";
+			while (softwareSerial.available() > 0)
+			{
+				char c = softwareSerial.read();
+				msg += c;
+			}
+			Serial.println(msg);
+		}
 	}
-	else if (touchPattern == TOUCH_0X0)
-	{
-		robot.exitUserMode();
-	}
-	else if (touchPattern == TOUCH_0XX)
-	{
-		robot.move(FORWARD,2000);
-	}
-	else if (touchPattern == TOUCH_XX0)
-	{
-		robot.move(BACKWARD,2000);
-	}
-	delay(20);
 }
