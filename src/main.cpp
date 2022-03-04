@@ -45,14 +45,7 @@ bool isMain = false;
 void setup()
 {
 	Serial.begin(9600);
-	if (isMain)
-	{
-		softwareSerial.begin(9600, SWSERIAL_8N1, 25, 15, false);
-	}
-	else
-	{
-		softwareSerial.begin(9600, SWSERIAL_8N1, 15, 25, false);
-	}
+	softwareSerial.begin(9600, SWSERIAL_8N1, 15, 26, false);
 	if (!softwareSerial)
 	{ // If the object did not initialize, then its configuration is invalid
 		Serial.println("Invalid SoftwareSerial pin configuration, check config");
@@ -86,29 +79,31 @@ void setLEDSequence()
 	clrCount = (clrCount + 1) % 7;
 }
 
+int msgSize = -1;
+String msg = "";
 void loop()
 {
-	if (isMain)
+	softwareSerial.println("#987654321#");
+	if (softwareSerial.available() > 0)
 	{
-		softwareSerial.print("#");
-		for (int i = 0; i < 10; i++)
+		while (softwareSerial.available() > 0)
 		{
-			softwareSerial.print(i);
-			delay(10);
-		}
-		softwareSerial.print("#");
-	}
-	else
-	{
-		if (softwareSerial.available() > 0)
-		{
-			String msg = "";
-			while (softwareSerial.available() > 0)
+			char c = softwareSerial.read();
+			if (c == '#' && msgSize == -1)
 			{
-				char c = softwareSerial.read();
+				msgSize = 0;
+			}
+			else if (c == '#')
+			{
+				Serial.println(msg);
+				msg = "";
+				msgSize = -1;
+			}
+			else
+			{
+				msgSize += 1;
 				msg += c;
 			}
-			Serial.println(msg);
 		}
 	}
 }
