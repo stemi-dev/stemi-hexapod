@@ -88,19 +88,19 @@ void RobotEngine::checkState()
 			robot.setMode(ROBOT_DANCE_MODE);
 			break;
 		case TOUCH_00X:
-			if (!robot.BTConnectedCount)
+			if (!robot.BTConnectedCount && !robot.isSerialConnectionOn)
 				robot._move(3, PI / 2, 0, 2000);
 			break;
 		case TOUCH_X00:
-			if (!robot.BTConnectedCount)
+			if (!robot.BTConnectedCount && !robot.isSerialConnectionOn)
 				robot._move(3, -PI / 2, 0, 2000);
 			break;
 		case TOUCH_0XX:
-			if (!robot.BTConnectedCount)
+			if (!robot.BTConnectedCount && !robot.isSerialConnectionOn)
 				robot._writeExtraServo(-80);
 			break;
 		case TOUCH_XX0:
-			if (!robot.BTConnectedCount)
+			if (!robot.BTConnectedCount && !robot.isSerialConnectionOn)
 				robot._writeExtraServo(80);
 			break;
 		}
@@ -185,7 +185,7 @@ void RobotEngine::modesGO()
 	switch (robotMode)
 	{
 	case ROBOT_STANDBY_MODE:
-		if (robot.BTConnectedCount)
+		if (robot.BTConnectedCount || robot.isSerialConnectionOn)
 		{
 			robot.useLedInputData(&robot.btInputData);
 		}
@@ -201,7 +201,7 @@ void RobotEngine::modesGO()
 
 	case ROBOT_WALK_MODE:
 		//set up walking parameters
-		if (robot.BTConnectedCount)
+		if (robot.BTConnectedCount || robot.isSerialConnectionOn)
 		{
 			robot.useMoveInputData(&robot.btInputData);
 			robot.useLedInputData(&robot.btInputData);

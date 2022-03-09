@@ -68,6 +68,7 @@ For additional information please check http://www.stemi.education.
 #define TASK_PERIOD_TOUCH 20
 #define TASK_PERIOD_SERVO 20
 #define TASK_PERIOD_ROBOT 20
+#define TASK_PERIOD_SERIAL 200
 #define TASK_PERIOD_BATT 200
 #define TASK_PERIOD_DANCE 275 //half of a songs beat
 
@@ -371,6 +372,7 @@ public:
 
 	int8_t mode = ROBOT_STANDBY_MODE;
 	uint8_t BTConnectedCount = 0;
+	bool isSerialConnectionOn = false;
 	int8_t userSlider = 0;
 	uint8_t hexSwVersion[3] = { HEXAPOD_SW_VERSION_MAJOR, HEXAPOD_SW_VERSION_MINOR, HEXAPOD_SW_VERSION_PATCH };
 	uint8_t hexHwVersion[3] = { HEXAPOD_HW_VERSION_MAJOR, HEXAPOD_HW_VERSION_MINOR, HEXAPOD_HW_VERSION_PATCH };

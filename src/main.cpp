@@ -34,26 +34,15 @@ For additional information please check http://www.stemi.education.
 */
 
 #include "Hexapod.h"
-#include <SoftwareSerial.h>
+#include "Serial.h"
 SharedData robot;
 Hexapod hexapod;
-
-SoftwareSerial softwareSerial;
 
 bool isMain = false;
 
 void setup()
 {
 	Serial.begin(9600);
-	softwareSerial.begin(9600, SWSERIAL_8N1, 15, 26, false);
-	if (!softwareSerial)
-	{ // If the object did not initialize, then its configuration is invalid
-		Serial.println("Invalid SoftwareSerial pin configuration, check config");
-		while (1)
-		{ // Don't continue with invalid configuration
-			delay(1000);
-		}
-	}
 	robot.storeName("Mirko");
 	hexapod.init();
 	robot.setLed(RED);
@@ -79,31 +68,7 @@ void setLEDSequence()
 	clrCount = (clrCount + 1) % 7;
 }
 
-int msgSize = -1;
-String msg = "";
 void loop()
 {
-	softwareSerial.println("#987654321#");
-	if (softwareSerial.available() > 0)
-	{
-		while (softwareSerial.available() > 0)
-		{
-			char c = softwareSerial.read();
-			if (c == '#' && msgSize == -1)
-			{
-				msgSize = 0;
-			}
-			else if (c == '#')
-			{
-				Serial.println(msg);
-				msg = "";
-				msgSize = -1;
-			}
-			else
-			{
-				msgSize += 1;
-				msg += c;
-			}
-		}
-	}
+	checkSerial();
 }

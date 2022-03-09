@@ -129,16 +129,16 @@ void SharedData::useLedInputData(InputData *data)
 		data->ledDiretion * PI / 180 + PI / 2);
 	_setLedRotationSpeed(data->ledRotationSpeed / 100.0 * 10);
 	_setLedBlinkingSpeed(data->ledBlinkingSpeed / 100.0 * 10);
-	ledCtrl.mode = data->ledMode;
-	for (int i = 0; i < LED_COUNT; i++)
-	{
-		for (int j = 0; j < 3; j++)
+	if (!robot.isSerialConnectionOn) {
+		ledCtrl.mode = data->ledMode;
+		for (int i = 0; i < LED_COUNT; i++)
 		{
-			ledCtrl.manualClr[i][j] = data->ledManualClr[i][j];
+			for (int j = 0; j < 3; j++)
+			{
+				ledCtrl.manualClr[i][j] = data->ledManualClr[i][j];
+			}
 		}
 	}
-
-
 }
 
 //seting user data [public]
