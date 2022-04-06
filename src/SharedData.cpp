@@ -149,6 +149,7 @@ void SharedData::setLedStatic(uint8_t ledNo, Color color)
 	userInputData.ledManualClr[ledNo][1] = color.g;
 	userInputData.ledManualClr[ledNo][2] = color.b;
 }
+
 void SharedData::setLedStatic(Color color)
 {
 	userInputData.ledMode = LED_MANUAL_MODE;
@@ -244,8 +245,6 @@ void SharedData::move(userPresetInputData movement, float duration)
 	userInputData.linearVelocity = saturate(movement.linearVelocity,0,100);
 	userInputData.direction = movement.direction;
 	userInputData.moveDuration = duration;
-
-
 }
 
 void SharedData::_move(float linearVelocity, float direction, float angularVelocity, float duration)

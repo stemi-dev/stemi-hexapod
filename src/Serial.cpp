@@ -114,7 +114,8 @@ String keys[] = {"linearVelocity",
                  "ledPrimarClr",
                  "ledSecondarClr",
                  "ledRotationSpeed",
-                 "ledBlinkingSpeed"};
+                 "ledBlinkingSpeed",
+                 "setLedStatic"};
 
 void handleMessage()
 {
@@ -182,16 +183,19 @@ void handleMessage()
     }
     else if (key == "ledDiretion")
     {
+        robot.ledCtrl.mode = LED_PARAMETRIC_MODE;
         robot.btInputData.ledDiretion = messageParts[2].toInt();
     }
     else if (key == "ledSpreadRatio")
     {
+        robot.ledCtrl.mode = LED_PARAMETRIC_MODE;
         robot.btInputData.ledSpreadRatio = messageParts[2].toInt();
     }
     else if (key == "ledPrimarClr")
     {
         if (messagePartsLength == 5)
         {
+            robot.ledCtrl.mode = LED_PARAMETRIC_MODE;
             robot.btInputData.ledPrimarClr[0] = messageParts[2].toInt();
             robot.btInputData.ledPrimarClr[1] = messageParts[3].toInt();
             robot.btInputData.ledPrimarClr[2] = messageParts[4].toInt();
@@ -201,6 +205,7 @@ void handleMessage()
     {
         if (messagePartsLength == 5)
         {
+            robot.ledCtrl.mode = LED_PARAMETRIC_MODE;
             robot.btInputData.ledSecondarClr[0] = messageParts[2].toInt();
             robot.btInputData.ledSecondarClr[1] = messageParts[3].toInt();
             robot.btInputData.ledSecondarClr[2] = messageParts[4].toInt();
@@ -208,10 +213,24 @@ void handleMessage()
     }
     else if (key == "ledRotationSpeed")
     {
+        robot.ledCtrl.mode = LED_PARAMETRIC_MODE;
         robot.btInputData.ledRotationSpeed = messageParts[2].toInt();
     }
     else if (key == "ledBlinkingSpeed")
     {
+        robot.ledCtrl.mode = LED_PARAMETRIC_MODE;
         robot.btInputData.ledBlinkingSpeed = messageParts[2].toInt();
+    }
+    else if (key == "setLedStatic")
+    {
+        Color c{static_cast<uint8_t>(messageParts[2].toInt()),
+                static_cast<uint8_t>(messageParts[3].toInt()), 
+                static_cast<uint8_t>(messageParts[4].toInt())};
+        if (messagePartsLength == 5) {
+            robot._setLedStatic(c);
+        } else if (messagePartsLength == 6) {
+            robot._setLedStatic(messageParts[5].toInt(), c);
+        }
+
     }
 }

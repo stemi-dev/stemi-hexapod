@@ -187,7 +187,9 @@ void RobotEngine::modesGO()
 	case ROBOT_STANDBY_MODE:
 		if (robot.BTConnectedCount || robot.isSerialConnectionOn)
 		{
-			robot.useLedInputData(&robot.btInputData);
+			if (robot.ledCtrl.mode != LED_MANUAL_MODE) {
+				robot.useLedInputData(&robot.btInputData);
+			}
 		}
 		else
 		{
@@ -204,7 +206,9 @@ void RobotEngine::modesGO()
 		if (robot.BTConnectedCount || robot.isSerialConnectionOn)
 		{
 			robot.useMoveInputData(&robot.btInputData);
-			robot.useLedInputData(&robot.btInputData);
+			if (robot.ledCtrl.mode != LED_MANUAL_MODE) {
+				robot.useLedInputData(&robot.btInputData);
+			}
 			robot._writeExtraServo(robot.universalData[0]);
 		}
 		else

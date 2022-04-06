@@ -40,15 +40,6 @@ Hexapod hexapod;
 
 bool isMain = false;
 
-void setup()
-{
-	Serial.begin(9600);
-	robot.storeName("Mirko");
-	hexapod.init();
-	robot.setLed(RED);
-	robot.setHeight(50);
-}
-
 Color clrArray[7] = {BLUE, YELLOW, GREEN, CYAN, PURPLE, RED, ORANGE};
 uint8_t clrCount = 0;
 
@@ -67,6 +58,17 @@ void setLEDSequence()
 	robot.setLedStatic(clrArray[clrCount]);
 	clrCount = (clrCount + 1) % 7;
 }
+
+
+void setup()
+{
+	Serial.begin(9600);
+	robot.storeName("Mirko");
+	hexapod.init();
+	robot.setLed(RED);
+	robot.setHeight(50);
+}
+
 
 void loop()
 {
