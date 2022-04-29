@@ -98,10 +98,10 @@ bool SoftwareSerial::isValidGPIOpin(int8_t pin) {
 }
 
 bool SoftwareSerial::isValidRxGPIOpin(int8_t pin) {
-    return isValidGPIOpin(pin)
-#if defined(ESP8266)
-        && (pin != 16)
-#endif
+    return true; //isValidGPIOpin(pin)
+// #if defined(ESP8266)
+//         && (pin != 16)
+// #endif
         ;
 }
 
