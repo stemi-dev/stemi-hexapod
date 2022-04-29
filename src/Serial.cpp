@@ -6,7 +6,7 @@ SoftwareSerial softwareSerial;
 
 void setupSerial()
 {
-    softwareSerial.begin(38400, SWSERIAL_8N1, 15, 32, false);
+    softwareSerial.begin(38400, SWSERIAL_8N1, 2, 13, false);
     if (!softwareSerial)
     {
         Serial.println("Invalid SoftwareSerial pin configuration, check config");
@@ -33,6 +33,7 @@ void checkSerial()
             else if (c == '#')
             {
                 softwareSerial.println("#" + message + "#");
+                Serial.println(message);
                 createMessageParts();
                 createHash();
                 handleMessage();
