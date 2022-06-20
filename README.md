@@ -1,5 +1,26 @@
 # STEMI hexapod v2 #
 
+## For shield master
+```cpp
+#include "Hexapod.h"
+#include "Serial.h"
+SharedData robot;
+Hexapod hexapod;
+
+void setup()
+{
+	Serial.begin(9600);
+	hexapod.init();
+	robot.setLed(RED);
+	robot.setHeight(50);
+}
+
+void loop()
+{
+	checkSerial();
+}
+```
+
 Library that includes everything you need to get your STEMI hexapod walking and dancing using your mobile app :)
 
 ### Prepare your Arduino IDE for programming esp32 ###
