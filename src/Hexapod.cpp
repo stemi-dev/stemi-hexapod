@@ -249,7 +249,7 @@ void Hexapod::init(uint8_t mode)
 	xTaskCreatePinnedToCore(batteryDriver, "batteryDriver", 4*1024, NULL, 5, NULL, ARDUINO_RUNNING_CORE); //temporarily high priority, just for the first run
 	xTaskCreatePinnedToCore(walkingEngine, "walkingEngine", 3*4096, NULL, 1, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(servoDriver, "servoDriver", 2*4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
-	xTaskCreatePinnedToCore(ledDriver, "ledDriver", 1024, NULL, 5, NULL, ARDUINO_RUNNING_CORE);
+	//xTaskCreatePinnedToCore(ledDriver, "ledDriver", 1024, NULL, 5, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(robotEngine, "robotEngine", 2*1024, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(btEngine, "btEngine", 2 * 4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(touchDriver, "touchDriver", 2 * 4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
