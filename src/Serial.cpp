@@ -26,6 +26,7 @@ void checkSerial()
         while (softwareSerial.available() > 0)
         {
             char c = softwareSerial.read();
+            Serial.print(c);
             if (c == '#' && messageSize == -1)
             {
                 messageSize = 0;

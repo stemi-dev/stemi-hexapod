@@ -38,34 +38,10 @@ For additional information please check http://www.stemi.education.
 SharedData robot;
 Hexapod hexapod;
 
-bool isMain = false;
-
 void setup()
 {
 	Serial.begin(9600);
-	robot.storeName("Mirko");
 	hexapod.init();
-	robot.setLed(RED);
-	robot.setHeight(50);
-}
-
-Color clrArray[7] = {BLUE, YELLOW, GREEN, CYAN, PURPLE, RED, ORANGE};
-uint8_t clrCount = 0;
-
-void setLEDrandom()
-{
-	robot.setLedStatic(0, clrArray[random(0, 6)]);
-	robot.setLedStatic(1, clrArray[random(0, 6)]);
-	robot.setLedStatic(2, clrArray[random(0, 6)]);
-	robot.setLedStatic(3, clrArray[random(0, 6)]);
-	robot.setLedStatic(4, clrArray[random(0, 6)]);
-	robot.setLedStatic(5, clrArray[random(0, 6)]);
-}
-
-void setLEDSequence()
-{
-	robot.setLedStatic(clrArray[clrCount]);
-	clrCount = (clrCount + 1) % 7;
 }
 
 void loop()
