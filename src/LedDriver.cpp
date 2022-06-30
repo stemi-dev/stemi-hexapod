@@ -90,13 +90,13 @@ void LedDriver::setColorManual()
 	}
 }
 
-float LedDriver::applyDirectionSpeed() 
+void LedDriver::applyDirectionSpeed() 
 {
-	if (robot.ledCtrl.rotationSpeed == 0)
+	if (robot.ledCtrl.rotationSpeed == 0) {
 		rotationSpeedDirection = 0;
+	}
 	else
 	{
-
 		rotationSpeedDirection += robot.ledCtrl.rotationSpeed * 2 * PI * TASK_PERIOD_LED / 1000;
 		//wrap to +-PI
 		if (rotationSpeedDirection > PI)
@@ -105,7 +105,7 @@ float LedDriver::applyDirectionSpeed()
 			rotationSpeedDirection = rotationSpeedDirection - 2 * PI* floor(rotationSpeedDirection / (2 * PI));
 	}
 }
-float LedDriver::applyBlinkingSpeed() 
+void LedDriver::applyBlinkingSpeed() 
 {
 	if (robot.ledCtrl.blinkingSpeed == 0)
 	{
