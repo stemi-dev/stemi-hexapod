@@ -414,22 +414,27 @@ void SharedData::exitUserMode()
 
 void SharedData::loadName()
 {
-	names.storeInit();
-	names.load(&robot.name);
+	// Preferences error on some ESP32 devices
 	uint8_t mac[6];
 	esp_efuse_mac_get_default(mac);
 	name = names.generateName(names.sumStringMemberValues1(mac), names.sumStringMemberValues2(mac));
 	Serial.printf("Name not stored, storing \"%s\"\n",name.c_str());
-	storeName(name);
+	return;
+	names.storeInit();
+	names.load(&robot.name);
+	if (name == "\0")
+	{
+		esp_efuse_mac_get_default(mac);
+		name = names.generateName(names.sumStringMemberValues1(mac), names.sumStringMemberValues2(mac));
+		Serial.printf("Name not stored, storing \"%s\"\n",name.c_str());
+		storeName(name);
+	}
 }
 
 void SharedData::storeName(std::string nameNew)
 {
 	names.storeInit();
 	names.store(nameNew);
-	uint8_t newMACAddress[6];
-	esp_efuse_mac_get_default(newMACAddress);
-	esp_base_mac_addr_set(&newMACAddress[0]);
 }
 
 void SharedData::startAction(std::string actionName)

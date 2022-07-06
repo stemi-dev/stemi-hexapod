@@ -59,9 +59,9 @@ uint16_t Names::sumStringMemberValues1(uint8_t str[6])
 uint16_t Names::sumStringMemberValues2(uint8_t str[6])
 {
 	uint16_t sum = 0;
-	for (unsigned i = 0; i<6; ++i)
+	for (unsigned i = 0; i < 4; ++i)
 	{
-		sum += (i + 1) * str[i];
+		sum += str[i];
 	}
 	return sum;
 }
