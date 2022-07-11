@@ -44,14 +44,15 @@ public:
     NeoTm1914_Mode Mode;
 };
 
-class Neo3ElementsTm1914Settings : public Neo3Elements
+class Neo3ByteElementsTm1914Settings : public Neo3ByteElements
 {
 public:
     typedef NeoTm1914Settings SettingsObject;
     static const size_t SettingsSize = 6;
 
-    static void applySettings(uint8_t* pData, const SettingsObject& settings)
+    static void applySettings([[maybe_unused]] uint8_t* pData, [[maybe_unused]] size_t sizeData, [[maybe_unused]] const SettingsObject& settings)
     {
+        // settings are at the front of the data stream
         uint8_t* pSet = pData;
         uint8_t mode = 0xff;
 
@@ -84,19 +85,21 @@ public:
         }
     }
 
-    static uint8_t* pixels(uint8_t* pData)
+    static uint8_t* pixels([[maybe_unused]] uint8_t* pData, [[maybe_unused]] size_t sizeData)
     {
+        // settings are at the front of the data stream
         return pData + SettingsSize;
     }
 
-    static const uint8_t* pixels(const uint8_t* pData)
+    static const uint8_t* pixels([[maybe_unused]] const uint8_t* pData, [[maybe_unused]] size_t sizeData)
     {
+        // settings are at the front of the data stream
         return pData + SettingsSize;
     }
 };
 
 
-class NeoRgbTm1914Feature : public Neo3ElementsTm1914Settings
+class NeoRgbTm1914Feature : public Neo3ByteElementsTm1914Settings
 {
 public:
     static void applyPixelColor(uint8_t* pPixels, uint16_t indexPixel, ColorObject color)
@@ -135,7 +138,7 @@ public:
 };
 
 
-class NeoGrbTm1914Feature : public Neo3ElementsTm1914Settings
+class NeoGrbTm1914Feature : public Neo3ByteElementsTm1914Settings
 {
 public:
     static void applyPixelColor(uint8_t* pPixels, uint16_t indexPixel, ColorObject color)

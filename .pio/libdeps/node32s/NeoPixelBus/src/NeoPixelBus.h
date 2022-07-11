@@ -46,6 +46,8 @@ License along with NeoPixel.  If not, see
 // '_state' flags for internal state
 #define NEO_DIRTY   0x80 // a change was made to pixel data that requires a show
 
+#include "internal/NeoUtil.h"
+
 #include "internal/NeoHueBlend.h"
 
 #include "internal/NeoSettings.h"
@@ -59,10 +61,14 @@ License along with NeoPixel.  If not, see
 #include "internal/HtmlColor.h"
 
 #include "internal/RgbwColor.h"
+#include "internal/Rgbw64Color.h"
+
 #include "internal/SegmentDigit.h"
 
 #include "internal/NeoColorFeatures.h"
 #include "internal/NeoTm1814ColorFeatures.h"
+#include "internal/NeoTm1914ColorFeatures.h"
+#include "internal/NeoSm168xxColorFeatures.h"
 #include "internal/DotStarColorFeatures.h"
 #include "internal/Lpd8806ColorFeatures.h"
 #include "internal/Lpd6803ColorFeatures.h"
@@ -92,10 +98,12 @@ License along with NeoPixel.  If not, see
 #include "internal/Lpd6803GenericMethod.h"
 #include "internal/Ws2801GenericMethod.h"
 #include "internal/P9813GenericMethod.h"
+#include "internal/Tlc5947GenericMethod.h"
 
 #if defined(ARDUINO_ARCH_ESP8266)
 
 #include "internal/NeoEsp8266DmaMethod.h"
+#include "internal/NeoEsp8266I2sDmx512Method.h"
 #include "internal/NeoEsp8266UartMethod.h"
 #include "internal/NeoEspBitBangMethod.h"
 
@@ -104,6 +112,7 @@ License along with NeoPixel.  If not, see
 #include "internal/NeoEsp32I2sMethod.h"
 #include "internal/NeoEsp32RmtMethod.h"
 #include "internal/NeoEspBitBangMethod.h"
+#include "internal/DotStarEsp32DmaSpiMethod.h"
 
 #elif defined(ARDUINO_ARCH_NRF52840) // must be before __arm__
 
@@ -149,6 +158,13 @@ public:
     {
     }
 
+    NeoPixelBus(uint16_t countPixels, uint8_t pinClock, uint8_t pinData, uint8_t pinLatch, uint8_t pinOutputEnable = NOT_A_PIN) :
+        _countPixels(countPixels),
+        _state(0),
+        _method(pinClock, pinData, pinLatch, pinOutputEnable, countPixels, T_COLOR_FEATURE::PixelSize, T_COLOR_FEATURE::SettingsSize)
+    {
+    }
+
     NeoPixelBus(uint16_t countPixels) :
         _countPixels(countPixels),
         _state(0),
@@ -172,10 +188,17 @@ public:
         ClearTo(0);
     }
 
-    // used by DotStartSpiMethod if pins can be configured
+    // used by DotStarSpiMethod/DotStarEsp32DmaSpiMethod if pins can be configured
     void Begin(int8_t sck, int8_t miso, int8_t mosi, int8_t ss)
     {
         _method.Initialize(sck, miso, mosi, ss);
+        ClearTo(0);
+    }
+
+    // used by DotStarEsp32DmaSpiMethod if pins can be configured - reordered and extended version supporting quad SPI
+    void Begin(int8_t sck, int8_t dat0, int8_t dat1, int8_t dat2, int8_t dat3, int8_t ss)
+    {
+        _method.Initialize(sck, dat0, dat1, dat2, dat3, ss);
         ClearTo(0);
     }
 
@@ -375,7 +398,7 @@ public:
 
     void SetPixelSettings(const typename T_COLOR_FEATURE::SettingsObject& settings)
     {
-        T_COLOR_FEATURE::applySettings(_method.getData(), settings);
+        T_COLOR_FEATURE::applySettings(_method.getData(), _method.getDataSize(), settings);
         Dirty();
     };
 
@@ -407,13 +430,13 @@ protected:
     uint8_t* _pixels()
     {
         // get pixels data within the data stream
-        return T_COLOR_FEATURE::pixels(_method.getData());
+        return T_COLOR_FEATURE::pixels(_method.getData(), _method.getDataSize());
     }
 
     const uint8_t* _pixels() const
     {
         // get pixels data within the data stream
-        return T_COLOR_FEATURE::pixels(_method.getData());
+        return T_COLOR_FEATURE::pixels(_method.getData(), _method.getDataSize());
     }
 
     void _rotateLeft(uint16_t rotationCount, uint16_t first, uint16_t last)

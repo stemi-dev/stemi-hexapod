@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-NeoPixel library helper functions for DotStars using general Pins (APA102/LPD8806).
+NeoPixel library helper functions for DotStars using SPI (APA102/LPD8806).
 
 Written by Michael C. Miller.
 
@@ -34,9 +34,20 @@ public:
     typedef NeoNoSettings SettingsObject;
     SpiSpeed40Mhz() {};
 
-    static void applySettings(const SettingsObject& settings) {}
+    static void applySettings([[maybe_unused]] const SettingsObject& settings) {}
 
     static const uint32_t Clock = 40000000L;
+};
+
+class SpiSpeed30Mhz
+{
+public:
+    typedef NeoNoSettings SettingsObject;
+    SpiSpeed30Mhz() {};
+
+    static void applySettings([[maybe_unused]] const SettingsObject& settings) {}
+
+    static const uint32_t Clock = 30000000L;
 };
 
 class SpiSpeed20Mhz
@@ -45,9 +56,20 @@ public:
     typedef NeoNoSettings SettingsObject;
     SpiSpeed20Mhz() {};
 
-    static void applySettings(const SettingsObject& settings) {}
+    static void applySettings([[maybe_unused]] const SettingsObject& settings) {}
 
     static const uint32_t Clock = 20000000L;
+};
+
+class SpiSpeed15Mhz
+{
+public:
+    typedef NeoNoSettings SettingsObject;
+    SpiSpeed15Mhz() {};
+
+    static void applySettings([[maybe_unused]] const SettingsObject& settings) {}
+
+    static const uint32_t Clock = 15000000L;
 };
 
 class SpiSpeed10Mhz
@@ -56,9 +78,20 @@ public:
     typedef NeoNoSettings SettingsObject;
     SpiSpeed10Mhz() {};
 
-    static void applySettings(const SettingsObject& settings) {}
+    static void applySettings([[maybe_unused]] const SettingsObject& settings) {}
 
     static const uint32_t Clock = 10000000L;
+};
+
+class SpiSpeed5Mhz
+{
+public:
+    typedef NeoNoSettings SettingsObject;
+    SpiSpeed5Mhz() {};
+
+    static void applySettings([[maybe_unused]] const SettingsObject& settings) {}
+
+    static const uint32_t Clock = 5000000L;
 };
 
 class SpiSpeed2Mhz
@@ -67,7 +100,7 @@ public:
     typedef NeoNoSettings SettingsObject;
     SpiSpeed2Mhz() {};
 
-    static void applySettings(const SettingsObject& settings) {}
+    static void applySettings([[maybe_unused]] const SettingsObject& settings) {}
 
     static const uint32_t Clock = 2000000L;
 };
@@ -78,7 +111,7 @@ public:
     typedef NeoNoSettings SettingsObject;
     SpiSpeed1Mhz() {};
 
-    static void applySettings(const SettingsObject& settings) {}
+    static void applySettings([[maybe_unused]] const SettingsObject& settings) {}
 
     static const uint32_t Clock = 1000000L;
 };
@@ -89,7 +122,7 @@ public:
     typedef NeoNoSettings SettingsObject;
     SpiSpeed500Khz() {};
 
-    static void applySettings(const SettingsObject& settings) {}
+    static void applySettings([[maybe_unused]] const SettingsObject& settings) {}
 
     static const uint32_t Clock = 500000L;
 };
@@ -113,7 +146,7 @@ public:
         Clock(10000000)
     {};
 
-    void applySettings(const SettingsObject& settings)
+    void applySettings([[maybe_unused]] const SettingsObject& settings)
     {
         Clock = settings.Clock;
     }
@@ -182,7 +215,7 @@ public:
 #endif
     }
 
-    void applySettings(const SettingsObject& settings)
+    void applySettings([[maybe_unused]] const SettingsObject& settings)
     {
         _speed.applySettings(settings);
     }

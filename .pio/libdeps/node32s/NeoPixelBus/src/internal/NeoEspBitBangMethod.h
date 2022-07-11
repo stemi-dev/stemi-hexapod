@@ -28,13 +28,11 @@ License along with NeoPixel.  If not, see
 
 #if defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_ESP32)
 
+// ESP32C3 I2S is not supported yet 
+#if !defined(CONFIG_IDF_TARGET_ESP32C3)
+
 #if defined(ARDUINO_ARCH_ESP8266)
 #include <eagle_soc.h>
-#endif
-
-// ESP32 doesn't define ICACHE_RAM_ATTR
-#ifndef ICACHE_RAM_ATTR
-#define ICACHE_RAM_ATTR IRAM_ATTR
 #endif
 
 #define CYCLES_LOOPTEST   (4) // adjustment due to loop exit test instruction cycles
@@ -88,7 +86,11 @@ public:
 };
 
 extern void NeoEspBitBangBase_send_pixels(uint8_t* pixels, uint8_t* end, uint8_t pin, uint32_t t0h, uint32_t t1h, uint32_t period);
-extern void NeoEspBitBangBase_send_pixels_inv(uint8_t* pixels, uint8_t* end, uint8_t pin, uint32_t t0h, uint32_t t1h, uint32_t period);
+extern void NeoEspBitBangBase_send_pixels_inv(uint8_t *pixels, uint8_t *end, uint8_t pin, uint32_t t0h, uint32_t t1h, uint32_t period);
+#if defined(ARDUINO_ARCH_ESP8266)
+extern void NeoEspBitBangBase_send_pixels_pin16(uint8_t *pixels, uint8_t *end, uint32_t t0h, uint32_t t1h, uint32_t period);
+extern void NeoEspBitBangBase_send_pixels_inv_pin16(uint8_t *pixels, uint8_t *end, uint32_t t0h, uint32_t t1h, uint32_t period);
+#endif
 
 class NeoEspPinset
 {
@@ -97,7 +99,14 @@ public:
 
     inline static void send_pixels_impl(uint8_t* pixels, uint8_t* end, uint8_t pin, uint32_t t0h, uint32_t t1h, uint32_t period)
     {
+#if defined(ARDUINO_ARCH_ESP8266)
+        if (pin == 16)
+            NeoEspBitBangBase_send_pixels_pin16(pixels, end, t0h, t1h, period);
+        else
+            NeoEspBitBangBase_send_pixels(pixels, end, pin, t0h, t1h, period);
+#else
         NeoEspBitBangBase_send_pixels(pixels, end, pin, t0h, t1h, period);
+#endif
     }
 };
 
@@ -108,7 +117,14 @@ public:
 
     inline static void send_pixels_impl(uint8_t* pixels, uint8_t* end, uint8_t pin, uint32_t t0h, uint32_t t1h, uint32_t period)
     {
+#if defined(ARDUINO_ARCH_ESP8266)
+        if (pin == 16)
+            NeoEspBitBangBase_send_pixels_inv_pin16(pixels, end, t0h, t1h, period);
+        else
+            NeoEspBitBangBase_send_pixels_inv(pixels, end, pin, t0h, t1h, period);
+#else
         NeoEspBitBangBase_send_pixels_inv(pixels, end, pin, t0h, t1h, period);
+#endif
     }
 };
 
@@ -302,7 +318,7 @@ public:
         return _sizeData;
     };
 
-    void applySettings(const SettingsObject& settings)
+    void applySettings([[maybe_unused]] const SettingsObject& settings)
     {
     }
 
@@ -328,6 +344,7 @@ typedef NeoEspBitBangMethodBase<NeoEspBitBangSpeedApa106, NeoEspPinset> NeoEsp32
 
 typedef NeoEsp32BitBangWs2812xMethod NeoEsp32BitBangWs2813Method;
 typedef NeoEsp32BitBang800KbpsMethod NeoEsp32BitBangWs2812Method;
+typedef NeoEsp32BitBangTm1814Method NeoEsp32BitBangTm1914Method;
 typedef NeoEsp32BitBangSk6812Method NeoEsp32BitBangLc8812Method;
 
 typedef NeoEspBitBangMethodBase<NeoEspBitBangInvertedSpeedWs2811, NeoEspPinsetInverted> NeoEsp32BitBangWs2811InvertedMethod;
@@ -341,6 +358,7 @@ typedef NeoEspBitBangMethodBase<NeoEspBitBangInvertedSpeedApa106, NeoEspPinsetIn
 
 typedef NeoEsp32BitBangWs2812xInvertedMethod NeoEsp32BitBangWs2813InvertedMethod;
 typedef NeoEsp32BitBang800KbpsInvertedMethod NeoEsp32BitBangWs2812InvertedMethod;
+typedef NeoEsp32BitBangTm1814InvertedMethod NeoEsp32BitBangTm1914InvertedMethod;
 typedef NeoEsp32BitBangSk6812InvertedMethod NeoEsp32BitBangLc8812InvertedMethod;
 
 #else
@@ -356,6 +374,7 @@ typedef NeoEspBitBangMethodBase<NeoEspBitBangSpeedApa106, NeoEspPinset> NeoEsp82
 
 typedef NeoEsp8266BitBangWs2812xMethod NeoEsp8266BitBangWs2813Method;
 typedef NeoEsp8266BitBang800KbpsMethod NeoEsp8266BitBangWs2812Method;
+typedef NeoEsp8266BitBangTm1814Method NeoEsp8266BitBangTm1914Method;
 typedef NeoEsp8266BitBangSk6812Method NeoEsp8266BitBangLc8812Method;
 
 typedef NeoEspBitBangMethodBase<NeoEspBitBangInvertedSpeedWs2811, NeoEspPinsetInverted> NeoEsp8266BitBangWs2811InvertedMethod;
@@ -369,9 +388,12 @@ typedef NeoEspBitBangMethodBase<NeoEspBitBangInvertedSpeedApa106, NeoEspPinsetIn
 
 typedef NeoEsp8266BitBangWs2812xInvertedMethod NeoEsp8266BitBangWs2813InvertedMethod;
 typedef NeoEsp8266BitBang800KbpsInvertedMethod NeoEsp8266BitBangWs2812InvertedMethod;
+typedef NeoEsp8266BitBangTm1814InvertedMethod NeoEsp8266BitBangTm1914InvertedMethod;
 typedef NeoEsp8266BitBangSk6812InvertedMethod NeoEsp8266BitBangLc8812InvertedMethod;
 
 #endif
 
 // ESP bitbang doesn't have defaults and should avoided except for testing
-#endif
+
+#endif // !defined(CONFIG_IDF_TARGET_ESP32C3)
+#endif // defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_ESP32)

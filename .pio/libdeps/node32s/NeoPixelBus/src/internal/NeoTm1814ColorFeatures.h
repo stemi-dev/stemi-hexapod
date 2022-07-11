@@ -51,21 +51,25 @@ public:
     }
 };
 
-class Neo4ElementsTm1814Settings : public Neo4Elements
+class Neo4ByteElementsTm1814Settings : public Neo4ByteElements
 {
+private:
+    const static uint16_t EncodeDivisor = 5;
+
 public:
     typedef NeoTm1814Settings SettingsObject;
     static const size_t SettingsSize = 8;
 
-    static void applySettings(uint8_t* pData, const SettingsObject& settings)
+    static void applySettings([[maybe_unused]] uint8_t* pData, [[maybe_unused]] size_t sizeData, [[maybe_unused]] const SettingsObject& settings)
     {
+        // settings are at the front of the data stream
         uint8_t* pSet = pData;
 
         // C1
-        *pSet++ = (SettingsObject::LimitCurrent(settings.WhiteCurrent) - SettingsObject::MinCurrent) / 5;
-        *pSet++ = (SettingsObject::LimitCurrent(settings.RedTenthMilliAmpere) - SettingsObject::MinCurrent) / 5;
-        *pSet++ = (SettingsObject::LimitCurrent(settings.GreenTenthMilliAmpere) - SettingsObject::MinCurrent) / 5;
-        *pSet++ = (SettingsObject::LimitCurrent(settings.BlueTenthMilliAmpere) - SettingsObject::MinCurrent) / 5;
+        *pSet++ = (SettingsObject::LimitCurrent(settings.WhiteTenthMilliAmpere) - SettingsObject::MinCurrent) / EncodeDivisor;
+        *pSet++ = (SettingsObject::LimitCurrent(settings.RedTenthMilliAmpere) - SettingsObject::MinCurrent) / EncodeDivisor;
+        *pSet++ = (SettingsObject::LimitCurrent(settings.GreenTenthMilliAmpere) - SettingsObject::MinCurrent) / EncodeDivisor;
+        *pSet++ = (SettingsObject::LimitCurrent(settings.BlueTenthMilliAmpere) - SettingsObject::MinCurrent) / EncodeDivisor;
         
         uint8_t* pC1 = pData;
 
@@ -76,19 +80,21 @@ public:
         }
     }
 
-    static uint8_t* pixels(uint8_t* pData)
+    static uint8_t* pixels([[maybe_unused]] uint8_t* pData, [[maybe_unused]] size_t sizeData)
     {
+        // settings are at the front of the data stream
         return pData + SettingsSize;
     }
 
-    static const uint8_t* pixels(const uint8_t* pData)
+    static const uint8_t* pixels([[maybe_unused]] const uint8_t* pData, [[maybe_unused]] size_t sizeData)
     {
-        return pData;
+        // settings are at the front of the data stream
+        return pData + SettingsSize;
     }
 };
 
 
-class NeoWrgbTm1814Feature : public Neo4ElementsTm1814Settings
+class NeoWrgbTm1814Feature : public Neo4ByteElementsTm1814Settings
 {
 public:
     static void applyPixelColor(uint8_t* pPixels, uint16_t indexPixel, ColorObject color)

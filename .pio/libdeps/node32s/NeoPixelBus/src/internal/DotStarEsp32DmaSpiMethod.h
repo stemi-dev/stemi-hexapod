@@ -127,7 +127,7 @@ public:
             ESP_ERROR_CHECK(ret);            
         }
         free(_data);
-        free(_dmadata);
+        heap_caps_free(_dmadata);
         _spiHandle = NULL;
     }
 
@@ -224,7 +224,7 @@ public:
         return _sizePixelData;
     };
 
-    void applySettings(const SettingsObject& settings)
+    void applySettings([[maybe_unused]] const SettingsObject& settings)
     {
         _speed.applySettings(settings);
         if (_spiHandle)
