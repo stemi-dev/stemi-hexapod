@@ -34,6 +34,7 @@ For additional information please check http://www.stemi.education.
 */
 
 #include "Hexapod.h"
+#include "Server.h"
 SharedData robot;
 Hexapod  hexapod;
 void setup()
@@ -60,6 +61,9 @@ void setLEDrandom()
 
 void loop()
 {
+  delay(5000);
+  Serial.println(robot.isConnected);
+  uploadServer();
 
 	int touchPattern = robot.getTouchPattern();
 	if (touchPattern == TOUCH_00X)

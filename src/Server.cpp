@@ -49,7 +49,14 @@ void serverLoop() {
 
 void uploadServer() {
     initServer();
+    Serial.println("Test");
     while(true) {
+        Serial.println("Foobar");
+        if (robot.isConnected) {
+            delay(1000);
+            Serial.println("Wait");
+            continue;
+        }
         serverLoop();
     }
 }

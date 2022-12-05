@@ -134,6 +134,18 @@ public:
 	}
 };
 
+class BLECustomServerCallbacks: public BLEServerCallbacks {
+    void onConnect(BLEServer* pServer) {
+      robot.setIsConnected(true);
+	  Serial.println("onConnect");
+    };
+
+    void onDisconnect(BLEServer* pServer) {
+      robot.setIsConnected(false);
+	  Serial.println("onDisconnect");
+    }
+};
+
 class otaCallback : public BLECharacteristicCallbacks {
 private:
 	esp_ota_handle_t otaHandler = 0;
@@ -218,6 +230,7 @@ void BluetoothLowEnergy::createBLEDevice(std::string deviceName) {
 	
 void BluetoothLowEnergy::createBLEServer() {
 	server = BLEDevice::createServer();
+	server->setCallbacks(new BLECustomServerCallbacks());
 };
 	
 void BluetoothLowEnergy::startAdvertising() {

@@ -443,3 +443,8 @@ void SharedData::startAction(std::string actionName)
 		startOtaServer();
 	}
 }
+
+void SharedData::setIsConnected(bool newIsConnected)
+{
+	isConnected = newIsConnected;
+}

@@ -355,6 +355,7 @@ public:
 
 	// Custom actions
 	void startAction(std::string actionName);
+	void setIsConnected(bool newIsConnected);
 
 	//UniversalData to be written from bluetooth or other sources
 	int8_t universalData[4] = { 0, 0, 0, 0, };
@@ -369,6 +370,8 @@ public:
 
 	//Robot name variables
 	Names names;
+
+	bool isConnected;
 
 	int8_t mode = ROBOT_STANDBY_MODE;
 	uint8_t BTConnectedCount = 0;
