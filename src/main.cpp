@@ -38,6 +38,7 @@ SharedData robot;
 Hexapod  hexapod;
 void setup()
 {
+	delay(15000);
 	Serial.begin(9600);
 	hexapod.init();
 	robot.setLed(GREEN);
