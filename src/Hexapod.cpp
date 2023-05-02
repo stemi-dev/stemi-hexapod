@@ -162,7 +162,7 @@ void btEngine(void *sharedDataNew)
 
 void touchDriver(void *sharedDataNew)
 {
-	Touch touch(50, 40, 5);
+	Touch touch(25, 40, 5);
 
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = TASK_PERIOD_TOUCH;

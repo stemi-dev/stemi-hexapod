@@ -34,14 +34,16 @@ For additional information please check http://www.stemi.education.
 */
 
 #include "Hexapod.h"
+#include "TouchDriver.h"
 SharedData robot;
-Hexapod  hexapod;
+Hexapod hexapod;
 void setup()
 {
 	Serial.begin(9600);
 	hexapod.init();
 	robot.setLed(GREEN);
 	robot.setHeight(50);
+	robot.setMode(ROBOT_USER_MODE);
 }
 
 Color clrArray[7] = {BLUE, YELLOW, GREEN, CYAN, PURPLE, RED, ORANGE};
@@ -57,34 +59,8 @@ void setLEDrandom()
 	robot.setLedStatic(5, clrArray[random(0, 6)]);
 }
 
-
 void loop()
 {
-
-	int touchPattern = robot.getTouchPattern();
-	if (touchPattern == TOUCH_00X)
-	{
-		robot.writeExtraServo(-80);
-		setLEDrandom();
-	}
-	else if (touchPattern == TOUCH_X00)
-	{
-		robot.setLedStatic(clrArray[clrCount]);
-		clrCount = (clrCount + 1) % 7;
-		robot.writeExtraServo(80);
-	}
-	else if (touchPattern == TOUCH_0X0)
-	{
-		robot.exitUserMode();
-	}
-	else if (touchPattern == TOUCH_0XX)
-	{
-		robot.move(FORWARD,2000);
-	}
-	else if (touchPattern == TOUCH_XX0)
-	{
-		robot.move(BACKWARD,2000);
-	}
-	delay(20);
+	Serial.println("Foobar");
+	delay(100);
 }
-

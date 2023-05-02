@@ -10,13 +10,13 @@ Touch::Touch(int treshold, int interval, int value) {
 	cycle_counter_detect_interval = interval;
 	cycle_counter_detect_value = value;
 
-	touchAttachInterrupt(T5, Touch::touchInterruptCallbackT5, touch_treshold);
-	touchAttachInterrupt(T6, Touch::touchInterruptCallbackT6, touch_treshold);
-	touchAttachInterrupt(T7, Touch::touchInterruptCallbackT7, touch_treshold);
+	touchAttachInterrupt(T4, Touch::touchInterruptCallbackT4, 25);
+	touchAttachInterrupt(T6, Touch::touchInterruptCallbackT6, 25);
+	touchAttachInterrupt(T7, Touch::touchInterruptCallbackT7, 25);
 }
 
-void Touch::touchInterruptCallbackT5() {
-	instance->writeInterruptTime(T5);
+void Touch::touchInterruptCallbackT4() {
+	instance->writeInterruptTime(T4);
 }
 
 void Touch::touchInterruptCallbackT6() {
@@ -29,7 +29,7 @@ void Touch::touchInterruptCallbackT7() {
 
 void Touch::writeInterruptTime(int touch) {
 	switch (touch) {
-		case T5: {
+		case T4: {
 			interruptTime[0] = millis();
 			break;
 		}
