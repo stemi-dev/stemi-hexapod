@@ -50,11 +50,6 @@ void batteryDriver(void *sharedDataNew)
 	while (1)
 	{
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
-		if (robot.battery.store == 1)
-		{
-			battery.calibrateBatteryPin();
-			robot.battery.store = 0;
-		}
 		battery.checkState();
 	}
 }

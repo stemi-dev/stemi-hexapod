@@ -69,7 +69,7 @@ For additional information please check http://www.stemi.education.
 #define TASK_PERIOD_SERVO 20
 #define TASK_PERIOD_ROBOT 20
 #define TASK_PERIOD_SERIAL 200
-#define TASK_PERIOD_BATT 200
+#define TASK_PERIOD_BATT 1000
 #define TASK_PERIOD_DANCE 275 //half of a songs beat
 
 //movement duration

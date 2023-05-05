@@ -28,13 +28,14 @@ void Touch::touchInterruptCallbackT7() {
 }
 
 void Touch::writeInterruptTime(int touch) {
+	// Check order
 	switch (touch) {
 		case T4: {
-			interruptTime[0] = millis();
+			interruptTime[1] = millis();
 			break;
 		}
 		case T6: {
-			interruptTime[1] = millis();
+			interruptTime[0] = millis();
 			break;
 		}
 		case T7: {
