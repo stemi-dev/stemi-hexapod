@@ -103,6 +103,7 @@ void servoDriver(void *sharedDataNew)
 			robot.servoCtrl.store = 0;
 		}
 		servoDriver.servoWrite();
+		servoDriver.analyseServo();
 	}
 }
 

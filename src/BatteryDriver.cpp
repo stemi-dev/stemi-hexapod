@@ -54,7 +54,6 @@ BatteryDriver::BatteryDriver()
 	batteryPinCalibrationValue = preferences.getFloat("batCalibVal", 0);
 	Serial.println("Battery sense calibration data loaded: ");
 
-	Wire.begin();
 	delay(10);
 	lipo.enableDebugging();
 	while (lipo.begin() == false) // Connect to the MAX17043 using the default wire port

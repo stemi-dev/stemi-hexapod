@@ -2,7 +2,6 @@
 
 ServoController::ServoController() : servo(115, 302, 519)
 {
-  Wire.begin(23,22);
   
 	pwmPCA9685.resetDevices();
 	pwmPCA9685.init(B000000);

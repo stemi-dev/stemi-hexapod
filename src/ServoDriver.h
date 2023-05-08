@@ -41,6 +41,12 @@ For additional information please check http://www.stemi.education.
 #include "ServoController.h"
 #include "Preferences.h"
 
+
+#define PIN_A 4
+#define PIN_B 5
+#define PIN_C 12
+#define PIN_AD 35
+
 class ServoDriver
 {
 public:
@@ -52,6 +58,8 @@ public:
 	int servoWrite();
 
 	hw_timer_t * timer = NULL;
+	float servoCurrent[7] = {0};
+	int servoCurrentCount[7] = {0};
 
 	//Servos
 	ServoController sc;
@@ -61,5 +69,6 @@ public:
 	void storageInit();
 	void storeCalibrationData();
 	void loadCalibrationData();
+	void analyseServo();
 };
 #endif

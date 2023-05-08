@@ -41,9 +41,10 @@ Hexapod hexapod;
 void setup()
 {
 	Serial.begin(9600);
+	Wire.begin(23, 22);
 	hexapod.init();
 	robot.setLed(GREEN);
-	robot.setHeight(50);
+	robot.setHeight(10);
 	robot.setMode(ROBOT_DANCE_MODE);
 }
 
@@ -60,51 +61,6 @@ void setLEDrandom()
 	robot.setLedStatic(5, clrArray[random(0, 6)]);
 }
 
-void loop()
-{
-	if (false)
-	{
-		Serial.print(robot.mode);
-		Serial.print(" ");
-		Serial.print(touchRead(T1));
-		Serial.print(" ");
-		Serial.print(touchRead(T2));
-		Serial.print(" ");
-		Serial.print(touchRead(T3));
-		Serial.print(" ");
-		Serial.print(touchRead(T4));
-		Serial.print(" ");
-		Serial.print(touchRead(T5));
-		Serial.print(" ");
-		Serial.print(touchRead(T6));
-		Serial.print(" ");
-		Serial.print(touchRead(T7));
-		Serial.print(" ");
-	}
-
-	int touchPattern = robot.getTouchPattern();
-	if (touchPattern == TOUCH_00X)
-	{
-		robot.writeExtraServo(-80);
-		setLEDrandom();
-	}
-	else if (touchPattern == TOUCH_X00)
-	{
-		robot.setLedStatic(clrArray[clrCount]);
-		clrCount = (clrCount + 1) % 7;
-		robot.writeExtraServo(80);
-	}
-	else if (touchPattern == TOUCH_0X0)
-	{
-		robot.exitUserMode();
-	}
-	else if (touchPattern == TOUCH_0XX)
-	{
-		robot.move(FORWARD, 2000);
-	}
-	else if (touchPattern == TOUCH_XX0)
-	{
-		robot.move(BACKWARD, 2000);
-	}
-	delay(20);
+void loop() {
+	delay(10);
 }
