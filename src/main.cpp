@@ -45,7 +45,7 @@ void setup()
 	hexapod.init();
 	robot.setLed(GREEN);
 	robot.setHeight(10);
-	robot.setMode(ROBOT_DANCE_MODE);
+	robot.setMode(ROBOT_USER_MODE);
 }
 
 Color clrArray[7] = {BLUE, YELLOW, GREEN, CYAN, PURPLE, RED, ORANGE};
@@ -59,8 +59,17 @@ void setLEDrandom()
 	robot.setLedStatic(3, clrArray[random(0, 6)]);
 	robot.setLedStatic(4, clrArray[random(0, 6)]);
 	robot.setLedStatic(5, clrArray[random(0, 6)]);
+	robot.setLedStatic(6, clrArray[random(0, 6)]);
+}
+
+void setMuxChannel2(int channel)
+{
+	digitalWrite(PIN_A, bitRead(channel, 0));
+	digitalWrite(PIN_B, bitRead(channel, 1));
+	digitalWrite(PIN_C, bitRead(channel, 2));
 }
 
 void loop() {
-	delay(10);
+	setLEDrandom();
+	delay(1000);
 }

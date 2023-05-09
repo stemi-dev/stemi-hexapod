@@ -47,6 +47,7 @@ LedDriver::LedDriver(): strip(LED_COUNT, LED_PIN)
 	strip.SetPixelColor(3, RgbColor(0, 0, 0));
 	strip.SetPixelColor(4, RgbColor(0, 0, 0));
 	strip.SetPixelColor(5, RgbColor(0, 0, 0));
+	strip.SetPixelColor(6, RgbColor(0, 0, 0));
 	delay(1);
 	strip.Show();
 }

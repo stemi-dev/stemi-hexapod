@@ -56,7 +56,7 @@ For additional information please check http://www.stemi.education.
 //#define DEBUG 
 //#define DEBUG_VOLTAGES
 
-#define LED_COUNT 6
+#define LED_COUNT 7
 #define LED_PIN 19 //Neopixel RGB LED strip pin
 #define SERVO_POWER_PIN 33
 #define EXTRA_SERVO_PIN 25
@@ -199,7 +199,7 @@ struct LedData
 	uint8_t ledSpreadRatio; // [0,100]%
 	int8_t ledRotationSpeed; // [-100,100]%
 	uint8_t ledBlinkingSpeed; // [0,100]%
-	uint8_t ledManualClr[6][3]; // 6x [255]r, [255]g, [255]b
+	uint8_t ledManualClr[LED_COUNT][3]; // 6x [255]r, [255]g, [255]b
 	int8_t ledMode; // [manual, parametric]mode
 };
 
