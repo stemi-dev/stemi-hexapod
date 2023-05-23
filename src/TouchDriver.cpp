@@ -10,7 +10,7 @@ Touch::Touch(int treshold, int interval, int value) {
 	cycle_counter_detect_interval = interval;
 	cycle_counter_detect_value = value;
 
-	touchAttachInterrupt(T4, Touch::touchInterruptCallbackT4, 25);
+	touchAttachInterrupt(T4, Touch::touchInterruptCallbackT4, 20);
 	touchAttachInterrupt(T6, Touch::touchInterruptCallbackT6, 25);
 	touchAttachInterrupt(T7, Touch::touchInterruptCallbackT7, 25);
 }

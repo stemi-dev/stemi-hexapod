@@ -171,7 +171,6 @@ void setMuxChannel(int channel)
 
 void ServoDriver::analyseServo()
 {
-	// TODO finish this
 	return;
 	if (servoCurrentCount[0] > 1000) {
 		for (int i = 0; i < 7; i++)

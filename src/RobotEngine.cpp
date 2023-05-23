@@ -260,6 +260,8 @@ void RobotEngine::modesGO()
 
 void RobotEngine::calibrateBattery(uint8_t touchID, int8_t exitMode)
 {
+	// Calibration removed
+	return;
 #ifdef DEBUG
 	Serial.print("t: ");
 	Serial.print(touchID);
