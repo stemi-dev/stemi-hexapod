@@ -70,6 +70,7 @@ For additional information please check http://www.stemi.education.
 #define TASK_PERIOD_ROBOT 20
 #define TASK_PERIOD_SERIAL 200
 #define TASK_PERIOD_BATT 1000
+#define TASK_PERIOD_EXPANSION 50
 #define TASK_PERIOD_DANCE 275 //half of a songs beat
 
 //movement duration
@@ -125,6 +126,11 @@ For additional information please check http://www.stemi.education.
 #define STRETCH_AMMOUNT 70 //%
 #define STRETCH_MAX 3 //radians
 #define TILT_MAX 0.3 //radians
+
+#define PIN_A 4
+#define PIN_B 5
+#define PIN_C 12
+#define PIN_AD 35
 
 //touch parameters
 #define TOUCH_000 0

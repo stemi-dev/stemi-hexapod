@@ -42,11 +42,6 @@ For additional information please check http://www.stemi.education.
 #include "Preferences.h"
 
 
-#define PIN_A 4
-#define PIN_B 5
-#define PIN_C 12
-#define PIN_AD 35
-
 class ServoDriver
 {
 public:

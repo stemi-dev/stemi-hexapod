@@ -34,70 +34,18 @@ For additional information please check http://www.stemi.education.
 */
 
 #include "Hexapod.h"
-#include "SparkFun_SHTC3.h"
 
 SharedData robot;
 Hexapod hexapod;
 
-SHTC3 mySHTC3;
-
-void setMuxChannel2(int channel)
-{
-	digitalWrite(PIN_A, bitRead(channel, 0));
-	digitalWrite(PIN_B, bitRead(channel, 1));
-	digitalWrite(PIN_C, bitRead(channel, 2));
-}
-
-void errorDecoder(SHTC3_Status_TypeDef message) // The errorDecoder function prints "SHTC3_Status_TypeDef" resultsin a human-friendly way
-{
-	switch (message)
-	{
-	case SHTC3_Status_Nominal:
-		Serial.print("Nominal");
-		break;
-	case SHTC3_Status_Error:
-		Serial.print("Error");
-		break;
-	case SHTC3_Status_CRC_Fail:
-		Serial.print("CRC Fail");
-		break;
-	default:
-		Serial.print("Unknown return code");
-		break;
-	}
-}
-
-void printInfo()
-{
-	SHTC3_Status_TypeDef result = mySHTC3.update();
-	if (mySHTC3.lastStatus == SHTC3_Status_Nominal) // You can also assess the status of the last command by checking the ".lastStatus" member of the object
-	{
-		Serial.print("RH = ");
-		Serial.print(mySHTC3.toPercent()); // "toPercent" returns the percent humidity as a floating point number
-		Serial.print("%, T = ");
-		Serial.print(mySHTC3.toDegC()); // "toDegF" and "toDegC" return the temperature as a flaoting point number in deg F and deg C respectively
-		Serial.println(" deg C");
-	}
-	else
-	{
-		Serial.print("Update failed, error: ");
-		errorDecoder(mySHTC3.lastStatus);
-		Serial.println();
-	}
-}
 
 void setup()
 {
-	pinMode(25, OUTPUT);
-	digitalWrite(25, LOW);
 	Serial.begin(9600);
 	Wire.begin(23, 22);
 	hexapod.init();
 	robot.setLed(GREEN);
 	robot.setHeight(50);
-	// setMuxChannel2(3);
-	delay(10);
-	// errorDecoder(mySHTC3.begin());
 }
 
 Color clrArray[7] = {BLUE, YELLOW, GREEN, CYAN, PURPLE, RED, ORANGE};

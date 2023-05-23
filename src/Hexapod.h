@@ -54,6 +54,7 @@ For additional information please check http://www.stemi.education.
 #include "Dance.h"
 #include "Server.h"
 #include "Serial.h"
+#include "ExpansionDriver.h"
 
 #include "ProductionVersion.h"
 
