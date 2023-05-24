@@ -42,6 +42,9 @@ ExpansionDriver::ExpansionDriver()
 
 void ExpansionDriver::readSensors()
 {
+	setChannel(2);
+	delay(1);
+
 	setChannel(3);
 	delay(1);
 	SHTC3_Status_TypeDef result = mySHTC3.update();
