@@ -161,7 +161,6 @@ void ServoDriver::loadCalibrationData()
 	}
 }
 
-
 void setMuxChannel(int channel)
 {
 	digitalWrite(PIN_A, bitRead(channel, 0));
@@ -171,33 +170,15 @@ void setMuxChannel(int channel)
 
 void ServoDriver::analyseServo()
 {
-	// TODO dodaj semafor ovdje zbog expansiona
-	return;
-	if (servoCurrentCount[0] > 1000) {
-		for (int i = 0; i < 7; i++)
-		{
-			servoCurrentCount[i] = 0;
-			servoCurrentCount[i] = 0;
-		}
-	}
-	for (int j = 0; j < 10; j++)
-	{
-		for (int i = 0; i < 7; i++)
-		{
-			setMuxChannel(i);
-			servoCurrent[i] += (float)((float)analogRead(PIN_AD) / 4095.0) / 3.3 * 0.1 * 50 * 1000;
-			servoCurrentCount[i] += 1;
-		}
-	}
+	// TODO
+	return
 	for (int i = 0; i < 7; i++)
 	{
-		float avgCurrent = servoCurrent[i] / servoCurrentCount[i];
-		Serial.print(i);
+		setMuxChannel(i);
+		Serial.print((float)((float)analogRead(PIN_AD) / 4095.0) / 3.3 * 0.1 * 50 * 1000);
 		Serial.print(" ");
-		Serial.println(avgCurrent);
 	}
 	setMuxChannel(7);
 	float voltage = (float)((float)analogRead(35) / 4095.0) * 3.3 * 2;
 	Serial.println(voltage);
-	Serial.println("############################");
 }

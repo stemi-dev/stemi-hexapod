@@ -38,6 +38,8 @@ For additional information please check http://www.stemi.education.
 SharedData robot;
 Hexapod hexapod;
 
+ExpansionDriver expansion;
+
 void setup()
 {
 	Serial.begin(9600);
@@ -88,4 +90,5 @@ void loop()
 		robot.move(BACKWARD, 2000);
 	}
 	delay(20);
+	expansion.readSensors();
 }

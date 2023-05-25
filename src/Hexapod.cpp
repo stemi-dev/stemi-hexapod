@@ -36,7 +36,8 @@ For additional information please check http://www.stemi.education.
 
 #include "Hexapod.h"
 
-void expansionDriver(void *sharedDataNew) {
+void expansionDriver(void *sharedDataNew)
+{
 
 	ExpansionDriver expansion;
 	TickType_t xLastWakeTime;
@@ -48,7 +49,6 @@ void expansionDriver(void *sharedDataNew) {
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		expansion.readSensors();
 	}
-	
 }
 
 void batteryDriver(void *sharedDataNew)
@@ -58,7 +58,7 @@ void batteryDriver(void *sharedDataNew)
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = TASK_PERIOD_BATT;
 	xLastWakeTime = xTaskGetTickCount();
-	
+
 	battery.checkState();
 	vTaskPrioritySet(NULL, 2);
 
@@ -71,7 +71,7 @@ void batteryDriver(void *sharedDataNew)
 
 void robotEngine(void *sharedDataNew)
 {
-  RobotEngine robotEngine;
+	RobotEngine robotEngine;
 
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = TASK_PERIOD_ROBOT;
@@ -85,7 +85,7 @@ void robotEngine(void *sharedDataNew)
 	}
 }
 
-void walkingEngine(void *sharedDataNew) 
+void walkingEngine(void *sharedDataNew)
 {
 	Body body;
 
@@ -103,12 +103,13 @@ void walkingEngine(void *sharedDataNew)
 void servoDriver(void *sharedDataNew)
 {
 	ServoDriver servoDriver;
-	
+
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = TASK_PERIOD_SERVO;
 	xLastWakeTime = xTaskGetTickCount();
+	int k = 0;
 
-	while(1)
+	while (1)
 	{
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		if (robot.servoCtrl.store)
@@ -133,11 +134,13 @@ void ledDriver(void *sharedDataNew)
 	while (1)
 	{
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
-		//TODO insert functions to control LEDs based on sharedData->ledCtrl variables
-		if (robot.ledCtrl.mode == LED_PARAMETRIC_MODE) {
+		// TODO insert functions to control LEDs based on sharedData->ledCtrl variables
+		if (robot.ledCtrl.mode == LED_PARAMETRIC_MODE)
+		{
 			ledDriver.setColorParametric();
 		}
-		else {
+		else
+		{
 			ledDriver.setColorManual();
 		}
 		ledDriver.writeToLED();
@@ -147,7 +150,7 @@ void ledDriver(void *sharedDataNew)
 void btEngine(void *sharedDataNew)
 {
 	BluetoothLowEnergy BLE("STEMI Hexapod " + robot.name);
-	
+
 	delay(2000);
 
 	TickType_t xLastWakeTime;
@@ -158,16 +161,16 @@ void btEngine(void *sharedDataNew)
 	{
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		robot.BTConnectedCount = BLE.server->getConnectedCount();
-		//check and publish battery level
+		// check and publish battery level
 		if ((uint8_t)BLE.batteryService->getCharacteristic(BATTERYLEVEL_CHARACTERISTIC_UUID)->getValue().c_str()[0] != robot.battery.percentage)
 		{
 			BLE.batteryService->getCharacteristic(BATTERYLEVEL_CHARACTERISTIC_UUID)->setValue(&robot.battery.percentage, 1);
 			BLE.batteryService->getCharacteristic(BATTERYLEVEL_CHARACTERISTIC_UUID)->notify();
 		}
-		//check and publish robot mode
+		// check and publish robot mode
 		if ((int8_t)BLE.parameterService->getCharacteristic(MODE_CHARACTERISTIC_UUID)->getValue().c_str()[0] != robot.mode)
 		{
-			BLE.parameterService->getCharacteristic(MODE_CHARACTERISTIC_UUID)->setValue((uint8_t*)&robot.mode, 1);
+			BLE.parameterService->getCharacteristic(MODE_CHARACTERISTIC_UUID)->setValue((uint8_t *)&robot.mode, 1);
 			BLE.parameterService->getCharacteristic(MODE_CHARACTERISTIC_UUID)->notify();
 		}
 	}
@@ -212,7 +215,7 @@ void dancingEngine(void *sharedDataNew)
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = TASK_PERIOD_DANCE;
 	const TickType_t xFrequency2 = 20;
-	
+
 	xLastWakeTime = xTaskGetTickCount();
 
 	while (1)
@@ -244,30 +247,28 @@ void dancingEngine(void *sharedDataNew)
 	}
 }
 
-
-
 Hexapod::Hexapod()
 {
 }
 
 void Hexapod::init(uint8_t mode)
 {
-    checkIsServerOn();
+	checkIsServerOn();
 	robot.setMode(mode);
 	ProductionVersion version;
 	version.check();
 	robot.loadName();
 	delay(200);
 	xTaskCreatePinnedToCore(btEngine, "btEngine", 4 * 4096, NULL, 2, NULL, ARDUINO_RUNNING_CORE);
-	xTaskCreatePinnedToCore(batteryDriver, "batteryDriver", 4*1024, NULL, 5, NULL, ARDUINO_RUNNING_CORE); //temporarily high priority, just for the first run
-	xTaskCreatePinnedToCore(walkingEngine, "walkingEngine", 3*4096, NULL, 1, NULL, ARDUINO_RUNNING_CORE);
-	xTaskCreatePinnedToCore(servoDriver, "servoDriver", 2*4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
+	xTaskCreatePinnedToCore(batteryDriver, "batteryDriver", 4 * 1024, NULL, 5, NULL, ARDUINO_RUNNING_CORE); // temporarily high priority, just for the first run
+	xTaskCreatePinnedToCore(walkingEngine, "walkingEngine", 3 * 4096, NULL, 1, NULL, ARDUINO_RUNNING_CORE);
+	xTaskCreatePinnedToCore(servoDriver, "servoDriver", 2 * 4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(ledDriver, "ledDriver", 1024, NULL, 5, NULL, ARDUINO_RUNNING_CORE);
-	xTaskCreatePinnedToCore(robotEngine, "robotEngine", 2*1024, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
+	xTaskCreatePinnedToCore(robotEngine, "robotEngine", 2 * 1024, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(touchDriver, "touchDriver", 2 * 4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(dancingEngine, "dancingEngine", 2 * 4096, NULL, 4, NULL, ARDUINO_RUNNING_CORE);
 
 	delay(200);
 	std::string welcomeNote = "\nSTEMI Hexapod " + robot.name + " initialized :)\n\n";
-	Serial.printf("%s",welcomeNote.c_str());
+	Serial.printf("%s", welcomeNote.c_str());
 }
