@@ -171,7 +171,7 @@ void setMuxChannel(int channel)
 void ServoDriver::analyseServo()
 {
 	// TODO
-	return
+	return;
 	for (int i = 0; i < 7; i++)
 	{
 		setMuxChannel(i);

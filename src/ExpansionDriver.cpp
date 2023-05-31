@@ -1,8 +1,10 @@
 
 #include "ExpansionDriver.h"
-#include "SparkFun_SHTC3.h"
+//#include "SparkFun_SHTC3.h"
+#include "Wire.h"
 
-SHTC3 mySHTC3;
+
+//SHTC3 mySHTC3;
 
 void setChannel(int channel)
 {
@@ -10,7 +12,7 @@ void setChannel(int channel)
 	digitalWrite(PIN_B, bitRead(channel, 1));
 	digitalWrite(PIN_C, bitRead(channel, 2));
 }
-
+/*
 void errorDecoder(SHTC3_Status_TypeDef message) // The errorDecoder function prints "SHTC3_Status_TypeDef" resultsin a human-friendly way
 {
 	switch (message)
@@ -28,23 +30,21 @@ void errorDecoder(SHTC3_Status_TypeDef message) // The errorDecoder function pri
 		Serial.print("Unknown return code");
 		break;
 	}
-}
+}*/
 
 ExpansionDriver::ExpansionDriver()
 {
 	pinMode(25, OUTPUT);
 	digitalWrite(25, LOW);
 	setChannel(3);
-	delay(10);
-	errorDecoder(mySHTC3.begin());
-	delay(1000);
+	delay(1);
+
+	//errorDecoder(mySHTC3.begin());
 }
 
 void ExpansionDriver::readSensors()
 {
-	setChannel(2);
-	delay(1);
-
+	/*
 	setChannel(3);
 	delay(1);
 	SHTC3_Status_TypeDef result = mySHTC3.update();
@@ -53,5 +53,5 @@ void ExpansionDriver::readSensors()
 		humidity = mySHTC3.toPercent();
 		degC = mySHTC3.toDegC();
 		degF = mySHTC3.toDegF();
-	}
+	}*/
 }

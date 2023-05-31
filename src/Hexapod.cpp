@@ -36,20 +36,6 @@ For additional information please check http://www.stemi.education.
 
 #include "Hexapod.h"
 
-void expansionDriver(void *sharedDataNew)
-{
-
-	ExpansionDriver expansion;
-	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = TASK_PERIOD_EXPANSION;
-	xLastWakeTime = xTaskGetTickCount();
-
-	while (1)
-	{
-		vTaskDelayUntil(&xLastWakeTime, xFrequency);
-		expansion.readSensors();
-	}
-}
 
 void batteryDriver(void *sharedDataNew)
 {
