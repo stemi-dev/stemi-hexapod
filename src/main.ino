@@ -41,7 +41,6 @@ Hexapod hexapod;
 void setup()
 {
 	Serial.begin(9600);
-	Wire.begin(23, 22);
 	hexapod.init();
 	robot.setLed(GREEN);
 	robot.setHeight(50);

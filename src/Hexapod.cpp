@@ -239,6 +239,7 @@ Hexapod::Hexapod()
 
 void Hexapod::init(uint8_t mode)
 {
+	Wire.begin(23, 22);
 	checkIsServerOn();
 	robot.setMode(mode);
 	ProductionVersion version;
