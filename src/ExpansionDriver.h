@@ -20,4 +20,7 @@ public:
 	int distance_left;
 	int distance_center;
 	int distance_right;
+
+	float left_light;
+	float right_light;
 };

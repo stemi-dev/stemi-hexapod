@@ -3,11 +3,12 @@
 #include "SparkFun_SHTC3.h"
 #include <SGBotic_I2CPing.h>
 #include "Wire.h"
-
 #include <SPI.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <SparkFun_VEML7700_Arduino_Library.h>
 
+VEML7700 lightSensor;
 SHTC3 mySHTC3;
 SGBotic_I2CPing sonar;
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
@@ -42,6 +43,16 @@ ExpansionDriver::ExpansionDriver()
 {
 	pinMode(25, OUTPUT);
 	digitalWrite(25, LOW);
+	setChannel(0);
+	while (lightSensor.begin() == false)
+	{
+		Serial.println("Unable to communicate with the VEML. Please check the wiring. Freezing...");
+	}
+	setChannel(2);
+	while (lightSensor.begin() == false)
+	{
+		Serial.println("Unable to communicate with the VEML. Please check the wiring. Freezing...");
+	}
 	setChannel(3);
 	errorDecoder(mySHTC3.begin());
 	delay(500);
@@ -64,6 +75,11 @@ void ExpansionDriver::displayWrite(String text)
 
 void ExpansionDriver::readSensors()
 {
+	setChannel(0);
+	left_light = lightSensor.getLux();
+	setChannel(2);
+	right_light = lightSensor.getLux();
+	
 	unsigned int current_time = millis();
 	if (current_time - mesure_time > MESURE_CYCLE_TIME)
 	{
