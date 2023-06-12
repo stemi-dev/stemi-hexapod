@@ -40,10 +40,6 @@ ServoDriver::ServoDriver()
 	delay(200);
 	storageInit();
 	loadCalibrationData();
-
-	pinMode(PIN_A, OUTPUT);
-	pinMode(PIN_B, OUTPUT);
-	pinMode(PIN_C, OUTPUT);
 }
 
 void ServoDriver::servoPower(bool power)
