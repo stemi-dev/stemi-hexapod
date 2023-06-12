@@ -9,6 +9,7 @@ class ExpansionDriver
 public:
 	ExpansionDriver();
 	void readSensors();
+	void displayWrite(String text);
 
 	unsigned long mesure_time;
 

@@ -65,6 +65,7 @@ void loop()
 {
 	ExpansionDriver expansionDriver;
 	while(true) {
+		expansionDriver.displayWrite("Test 123\nfoobar123\nSTEMI");
 		expansionDriver.readSensors();
 	}
 }

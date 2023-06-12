@@ -2,11 +2,15 @@
 #include "ExpansionDriver.h"
 #include "SparkFun_SHTC3.h"
 #include <SGBotic_I2CPing.h>
-#include "SSD1306Wire.h"
 #include "Wire.h"
+
+#include <SPI.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
 SHTC3 mySHTC3;
 SGBotic_I2CPing sonar;
+Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
 
 void setChannel(int channel)
 {
@@ -41,22 +45,25 @@ ExpansionDriver::ExpansionDriver()
 	setChannel(3);
 	errorDecoder(mySHTC3.begin());
 	delay(500);
-	oled.init();		   // Initialze SSD1306 OLED display
-	oled.clearDisplay();   // Clear screen
-	oled.setTextXY(0, 0);  // Set cursor position, start of line 0
-	oled.putString("Test 123");
+	display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+	display.display();
+}
+
+void ExpansionDriver::displayWrite(String text)
+{
+	setChannel(3);
+	display.clearDisplay();
+	display.setRotation(2);
+	display.setTextSize(1);
+	display.setTextColor(SSD1306_WHITE);
+	display.setCursor(0, 0);
+	display.print(text);
+	display.setCursor(0, 0);
+	display.display();
 }
 
 void ExpansionDriver::readSensors()
 {
-
-	setChannel(3);
-	oled.init();		   // Initialze SSD1306 OLED display
-	oled.clearDisplay();   // Clear screen
-	oled.setTextXY(0, 0);  // Set cursor position, start of line 0
-	oled.putString("Test 123");
-	delay(100);
-	return;
 	unsigned int current_time = millis();
 	if (current_time - mesure_time > MESURE_CYCLE_TIME)
 	{
