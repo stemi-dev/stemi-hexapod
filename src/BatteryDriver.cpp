@@ -35,6 +35,7 @@ For additional information please check http://www.stemi.education.
 
 #include "BatteryDriver.h"
 #include "SparkFun_MAX1704x_Fuel_Gauge_Arduino_Library.h"
+#include "Semaphore.h"
 
 SFE_MAX1704X lipo(MAX1704X_MAX17048);
 
@@ -156,7 +157,10 @@ void BatteryDriver::checkState()
 
 float BatteryDriver::readBatteryVoltage()
 {
-	return lipo.getVoltage();
+	takeSemaphore();
+	float voltage = lipo.getVoltage();
+	giveSemaphore();
+	return voltage;
 }
 
 float BatteryDriver::LPFvoltage(float valueNew)

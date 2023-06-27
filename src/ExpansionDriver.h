@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "SharedData.h"
 
-#define MESURE_CYCLE_TIME 0
+#define MESURE_CYCLE_TIME 500
 #define MESURE_DURATION 120
 
 class ExpansionDriver
@@ -10,6 +10,9 @@ public:
 	ExpansionDriver();
 	void readSensors();
 	void displayWrite(String text);
+	void readLux();
+	void readDistance();
+	void readSHT();
 
 	unsigned long mesure_time;
 
@@ -23,4 +26,6 @@ public:
 
 	float left_light;
 	float right_light;
+	
+	int last_distance_read = 0;
 };

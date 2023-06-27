@@ -7,6 +7,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <SparkFun_VEML7700_Arduino_Library.h>
+#include "Semaphore.h"
 
 VEML7700 lightSensor;
 SHTC3 mySHTC3;
@@ -44,15 +45,9 @@ ExpansionDriver::ExpansionDriver()
 	pinMode(25, OUTPUT);
 	digitalWrite(25, LOW);
 	setChannel(0);
-	while (lightSensor.begin() == false)
-	{
-		Serial.println("Unable to communicate with the VEML. Please check the wiring. Freezing...");
-	}
+	lightSensor.begin();
 	setChannel(2);
-	while (lightSensor.begin() == false)
-	{
-		Serial.println("Unable to communicate with the VEML. Please check the wiring. Freezing...");
-	}
+	lightSensor.begin();
 	setChannel(3);
 	errorDecoder(mySHTC3.begin());
 	delay(500);
@@ -73,48 +68,53 @@ void ExpansionDriver::displayWrite(String text)
 	display.display();
 }
 
-void ExpansionDriver::readSensors()
+void ExpansionDriver::readLux()
 {
 	setChannel(0);
 	left_light = lightSensor.getLux();
 	setChannel(2);
 	right_light = lightSensor.getLux();
-	
-	unsigned int current_time = millis();
-	if (current_time - mesure_time > MESURE_CYCLE_TIME)
-	{
-		for (int i = 0; i < 3; i++)
-		{
-			setChannel(i);
-			sonar.start_measure();
-		}
-		mesure_time = millis();
-	}
-	if (current_time - mesure_time > (MESURE_CYCLE_TIME + MESURE_DURATION))
-	{
-		for (int i = 0; i < 3; i++)
-		{
-			setChannel(i);
-			int val = sonar.get_mesure();
-			if (val >= 0)
-			{
+}
 
-				if (i == 0)
-				{
-					distance_left = val;
-				}
-				else if (i == 1)
-				{
-					distance_center = val;
-				}
-				else
-				{
-					distance_right = val;
-				}
-			}
-		}
+void ExpansionDriver::readDistance()
+{
+	last_distance_read += 1;
+	if (last_distance_read >= 3)
+	{
+		last_distance_read = 0;
 	}
 
+	takeSemaphore();
+	setChannel(last_distance_read);
+	sonar.start_measure();
+	giveSemaphore();
+
+	vTaskDelay(MESURE_DURATION);
+
+	takeSemaphore();
+	setChannel(last_distance_read);
+	int val = sonar.get_mesure();
+	if (val >= 0)
+	{
+
+		if (last_distance_read == 0)
+		{
+			distance_left = val;
+		}
+		else if (last_distance_read == 1)
+		{
+			distance_center = val;
+		}
+		else
+		{
+			distance_right = val;
+		}
+	}
+	giveSemaphore();
+}
+
+void ExpansionDriver::readSHT()
+{
 	setChannel(3);
 	SHTC3_Status_TypeDef result = mySHTC3.update();
 	if (mySHTC3.lastStatus == SHTC3_Status_Nominal)
@@ -123,4 +123,11 @@ void ExpansionDriver::readSensors()
 		degC = mySHTC3.toDegC();
 		degF = mySHTC3.toDegF();
 	}
+}
+
+void ExpansionDriver::readSensors()
+{
+	readLux();
+	readDistance();
+	readSHT();
 }

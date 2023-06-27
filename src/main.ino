@@ -64,8 +64,20 @@ void setLEDrandom()
 void loop()
 {
 	ExpansionDriver expansionDriver;
-	while(true) {
-		expansionDriver.displayWrite("Test 123\nfoobar123\nSTEMI");
+	while (true)
+	{
 		expansionDriver.readSensors();
+		Serial.print(expansionDriver.degC);
+		Serial.print(" ");
+		Serial.print(expansionDriver.left_light);
+		Serial.print(" ");
+		Serial.print(expansionDriver.right_light);
+		Serial.print(" ");
+		Serial.print(expansionDriver.distance_left);
+		Serial.print(" ");
+		Serial.print(expansionDriver.distance_center);
+		Serial.print(" ");
+		Serial.print(expansionDriver.distance_right);
+		Serial.println("");
 	}
 }
