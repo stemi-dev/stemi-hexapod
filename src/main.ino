@@ -63,21 +63,26 @@ void setLEDrandom()
 
 void loop()
 {
+	int i = 0;
 	ExpansionDriver expansionDriver;
 	while (true)
 	{
-		expansionDriver.readSensors();
-		Serial.print(expansionDriver.degC);
-		Serial.print(" ");
-		Serial.print(expansionDriver.left_light);
-		Serial.print(" ");
-		Serial.print(expansionDriver.right_light);
-		Serial.print(" ");
-		Serial.print(expansionDriver.distance_left);
-		Serial.print(" ");
-		Serial.print(expansionDriver.distance_center);
-		Serial.print(" ");
-		Serial.print(expansionDriver.distance_right);
-		Serial.println("");
+		i += 1;
+		char msg[32];
+		robot.setLedStatic(6, clrArray[i%7]);
+		expansionDriver.displayWrite("Hello STEMI World!");
+		delay(3000);
+		expansionDriver.readLux(0);
+		delay(100);
+		expansionDriver.readLux(1);
+		sprintf(msg, "L1: %d, L2: %d", expansionDriver.left_light, expansionDriver.right_light);
+		delay(100);
+		expansionDriver.displayWrite(msg);
+		delay(3000);
+		expansionDriver.readSHT();
+		sprintf(msg, "T: %.2f, H: %.2f", expansionDriver.degC, expansionDriver.humidity);
+		delay(100);
+		expansionDriver.displayWrite(msg);
+		delay(3000);
 	}
 }

@@ -68,40 +68,52 @@ void ExpansionDriver::displayWrite(String text)
 	display.display();
 }
 
-void ExpansionDriver::readLux()
+int ExpansionDriver::readLux(int sensor_index)
 {
-	setChannel(0);
-	left_light = lightSensor.getLux();
-	setChannel(2);
-	right_light = lightSensor.getLux();
+	if (sensor_index == 0)
+	{
+		setChannel(0);
+		left_light = lightSensor.getLux();
+		return left_light;
+	}
+	else
+	{
+		setChannel(2);
+		right_light = lightSensor.getLux();
+		return right_light;
+	}
 }
 
-void ExpansionDriver::readDistance()
+int ExpansionDriver::readNextDistance()
 {
 	last_distance_read += 1;
 	if (last_distance_read >= 3)
 	{
 		last_distance_read = 0;
 	}
+	return readDistance(last_distance_read);
+}
 
+int ExpansionDriver::readDistance(int sensor_index)
+{
 	takeSemaphore();
-	setChannel(last_distance_read);
+	setChannel(sensor_index);
 	sonar.start_measure();
 	giveSemaphore();
 
 	vTaskDelay(MESURE_DURATION);
 
 	takeSemaphore();
-	setChannel(last_distance_read);
+	setChannel(sensor_index);
 	int val = sonar.get_mesure();
 	if (val >= 0)
 	{
 
-		if (last_distance_read == 0)
+		if (sensor_index == 0)
 		{
 			distance_left = val;
 		}
-		else if (last_distance_read == 1)
+		else if (sensor_index == 1)
 		{
 			distance_center = val;
 		}
@@ -111,6 +123,7 @@ void ExpansionDriver::readDistance()
 		}
 	}
 	giveSemaphore();
+	return val;
 }
 
 void ExpansionDriver::readSHT()
@@ -127,7 +140,8 @@ void ExpansionDriver::readSHT()
 
 void ExpansionDriver::readSensors()
 {
-	readLux();
-	readDistance();
+	readLux(0);
+	readLux(1);
+	readNextDistance();
 	readSHT();
 }

@@ -10,8 +10,9 @@ public:
 	ExpansionDriver();
 	void readSensors();
 	void displayWrite(String text);
-	void readLux();
-	void readDistance();
+	int readLux(int sensor_index);
+	int readDistance(int sensor_index);
+	int readNextDistance();
 	void readSHT();
 
 	unsigned long mesure_time;
@@ -26,6 +27,6 @@ public:
 
 	float left_light;
 	float right_light;
-	
+
 	int last_distance_read = 0;
 };

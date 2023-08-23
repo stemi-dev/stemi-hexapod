@@ -128,8 +128,10 @@ void LedDriver::applyBlinkingSpeed()
 
 void LedDriver::writeToLED()
 {
-	for (int i = 0; i < LED_COUNT; i++)
+	for (int i = 0; i < 6; i++)
 			strip.SetPixelColor(ledMap[i], RgbColor(robot.ledCtrl.finalClr[i][0], robot.ledCtrl.finalClr[i][1], robot.ledCtrl.finalClr[i][2]));
+	strip.SetPixelColor(6, RgbColor(robot.userInputData.ledManualClr[6][0], robot.userInputData.ledManualClr[6][1], robot.userInputData.ledManualClr[6][2]));
+			
 	delay(3);
 	strip.Show();
 }
