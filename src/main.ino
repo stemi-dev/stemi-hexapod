@@ -63,26 +63,32 @@ void setLEDrandom()
 
 void loop()
 {
-	int i = 0;
-	ExpansionDriver expansionDriver;
-	while (true)
-	{
-		i += 1;
-		char msg[32];
-		robot.setLedStatic(6, clrArray[i%7]);
-		expansionDriver.displayWrite("Hello STEMI World!");
-		delay(3000);
-		expansionDriver.readLux(0);
-		delay(100);
-		expansionDriver.readLux(1);
-		sprintf(msg, "L1: %d, L2: %d", expansionDriver.left_light, expansionDriver.right_light);
-		delay(100);
-		expansionDriver.displayWrite(msg);
-		delay(3000);
-		expansionDriver.readSHT();
-		sprintf(msg, "T: %.2f, H: %.2f", expansionDriver.degC, expansionDriver.humidity);
-		delay(100);
-		expansionDriver.displayWrite(msg);
-		delay(3000);
+	int touchPattern = robot.getTouchPattern();
+	if (touchPattern != TOUCH_000) {
+		Serial.println(touchPattern);
 	}
+	if (touchPattern == TOUCH_00X)
+	{
+		robot.writeExtraServo(-80);
+		setLEDrandom();
+	}
+	else if (touchPattern == TOUCH_X00)
+	{
+		robot.setLedStatic(clrArray[clrCount]);
+		clrCount = (clrCount + 1) % 7;
+		robot.writeExtraServo(80);
+	}
+	else if (touchPattern == TOUCH_0X0)
+	{
+		robot.exitUserMode();
+	}
+	else if (touchPattern == TOUCH_0XX)
+	{
+		robot.move(FORWARD,2000);
+	}
+	else if (touchPattern == TOUCH_XX0)
+	{
+		robot.move(BACKWARD,2000);
+	}
+	delay(20);
 }
