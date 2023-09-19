@@ -14,6 +14,7 @@ public:
 	int readDistance(int sensor_index);
 	int readNextDistance();
 	void readSHT();
+	void init();
 
 	unsigned long mesure_time;
 

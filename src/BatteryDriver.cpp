@@ -64,6 +64,7 @@ BatteryDriver::BatteryDriver()
 	}
 	lipo.quickStart();
 	lipo.setThreshold(5);
+	Serial.println("BatteryDriver started");
 
 	robot.battery.voltage = readBatteryVoltage();
 	for (uint8_t i = 0; i < 1; i++)
@@ -86,7 +87,7 @@ BatteryDriver::BatteryDriver()
 
 void BatteryDriver::checkState()
 {
-	robot.battery.voltage = LPFvoltage(readBatteryVoltage());
+	robot.battery.voltage = 5;// LPFvoltage(readBatteryVoltage());
 
 	switch (robot.battery.state)
 	{

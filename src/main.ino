@@ -63,32 +63,27 @@ void setLEDrandom()
 
 void loop()
 {
-	int touchPattern = robot.getTouchPattern();
-	if (touchPattern != TOUCH_000) {
-		Serial.println(touchPattern);
+	char msg[32];
+	ExpansionDriver expansionDriver;
+	delay(2000);
+	expansionDriver.init();
+	while(true) {
+		delay(500);
+		expansionDriver.readLux(0);
+		delay(500);
+		Serial.println(expansionDriver.left_light);
 	}
-	if (touchPattern == TOUCH_00X)
+	while (true)
 	{
-		robot.writeExtraServo(-80);
-		setLEDrandom();
+		expansionDriver.displayWrite("Hello STEMI World!");
+		for (int i = 0; i < 7; i++)
+		{
+			robot.setLedStatic(6, clrArray[i % 7]);
+			delay(500);
+		}
+		expansionDriver.readSHT();
+		sprintf(msg, "T: %.2f, H: %.2f", expansionDriver.degC, expansionDriver.humidity);
+		expansionDriver.displayWrite(msg);
+		delay(3000);
 	}
-	else if (touchPattern == TOUCH_X00)
-	{
-		robot.setLedStatic(clrArray[clrCount]);
-		clrCount = (clrCount + 1) % 7;
-		robot.writeExtraServo(80);
-	}
-	else if (touchPattern == TOUCH_0X0)
-	{
-		robot.exitUserMode();
-	}
-	else if (touchPattern == TOUCH_0XX)
-	{
-		robot.move(FORWARD,2000);
-	}
-	else if (touchPattern == TOUCH_XX0)
-	{
-		robot.move(BACKWARD,2000);
-	}
-	delay(20);
 }
