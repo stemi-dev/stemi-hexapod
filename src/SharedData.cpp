@@ -394,6 +394,11 @@ float SharedData::getBatteryVoltage()
 	return robot.battery.voltage;
 }
 
+float SharedData::getBatteryRealPercentage()
+{
+	return robot.battery.real_percentage;
+}
+
 uint8_t SharedData::getBatteryPercentage()
 {
 	return robot.battery.percentage;

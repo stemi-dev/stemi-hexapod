@@ -285,6 +285,7 @@ struct BatteryState
 {
 	float voltage = 0;
 	uint8_t percentage = 50;
+	float real_percentage = -1;
 	uint8_t state = BATTERY_MID_STATE;
 	bool store = 0;
 };
@@ -343,6 +344,7 @@ public:
 	//Battery functions
 	float getBatteryVoltage();
 	uint8_t getBatteryPercentage();
+	float getBatteryRealPercentage();
 
 	//Robot modes functions
 	void setMode(int8_t modeNew);

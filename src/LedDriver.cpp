@@ -52,6 +52,24 @@ LedDriver::LedDriver(): strip(LED_COUNT, LED_PIN)
 	strip.Show();
 }
 
+void LedDriver::setBatteryPercentage(int repeat) {
+	if (repeat <= 0) {
+		return;
+	}
+	float percentage = robot.getBatteryRealPercentage();
+	Serial.println(percentage);
+	if (percentage == -1) {
+		setBatteryPercentage(repeat - 1);
+	}
+	RgbColor charge_color = percentage < 20 ? RgbColor(255, 0, 0) : percentage < 70 ? RgbColor(0, 0, 255) : RgbColor(0, 255, 0);
+	for (int i = 0; i < 6; i++) {
+		strip.SetPixelColor(i, percentage > i * 16 ? charge_color :  RgbColor(0, 0, 0));
+		delay(150);
+		strip.Show();
+	}
+	delay(1000);
+}
+
 void LedDriver::setColorParametric()
 {
 	applyDirectionSpeed();
