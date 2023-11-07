@@ -201,6 +201,7 @@ public:
 
 
 BluetoothLowEnergy::BluetoothLowEnergy(std::string deviceName) {
+	deviceName = deviceName.substr(0, 29);
 	createBLEDevice(deviceName);
 	createBLEServer();
 	createMovementServiceWithCharacteristics();

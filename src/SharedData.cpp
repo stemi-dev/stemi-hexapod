@@ -74,7 +74,6 @@ SharedData:: SharedData()
 	danceInputData.ledSpreadRatio = 100;
 	danceInputData.poseSpeed = 80;
 	danceInputData.moveDuration = -1;
-
 }
 
 void SharedData::writeServoAngles(float servoAnglesNew[18])
