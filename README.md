@@ -1,4 +1,6 @@
-# STEMI hexapod v2 #
+# STEMI hexapod v3 #
+
+v1 and v2 on other branch
 
 ## For shield master
 ```cpp
