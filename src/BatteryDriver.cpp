@@ -66,6 +66,9 @@ BatteryDriver::BatteryDriver()
 	lipo.setThreshold(5);
 
 	robot.battery.voltage = readBatteryVoltage();
+	takeSemaphore();
+	robot.battery.real_percentage = lipo.getSOC();
+	giveSemaphore();
 	for (uint8_t i = 0; i < 1; i++)
 	{
 		checkState();
@@ -87,6 +90,9 @@ BatteryDriver::BatteryDriver()
 void BatteryDriver::checkState()
 {
 	robot.battery.voltage = LPFvoltage(readBatteryVoltage());
+	takeSemaphore();
+	robot.battery.real_percentage = lipo.getSOC();
+	giveSemaphore();
 
 	switch (robot.battery.state)
 	{

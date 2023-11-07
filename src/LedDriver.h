@@ -50,6 +50,7 @@ public:
 	void applyDirectionSpeed();
 	void applyBlinkingSpeed();
 	void writeToLED();
+	void setBatteryPercentage(int repeat);
 
 	NeoPixelBrightnessBus<NeoGrbFeature, Neo800KbpsMethod> strip;
 

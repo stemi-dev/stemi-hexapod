@@ -116,6 +116,8 @@ void ledDriver(void *sharedDataNew)
 	const TickType_t xFrequency = TASK_PERIOD_LED;
 	xLastWakeTime = xTaskGetTickCount();
 
+	vTaskDelayUntil(&xLastWakeTime, 1000);
+	ledDriver.setBatteryPercentage(10);
 	while (1)
 	{
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
