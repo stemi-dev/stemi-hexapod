@@ -63,14 +63,6 @@ void setLEDrandom()
 
 void loop()
 {
-	Serial.println(" ");
-	Serial.print(" 4: ");
-	Serial.print(touchRead(T4));
-	Serial.print(" 6: ");
-	Serial.print(touchRead(T6));
-	Serial.print(" 7: ");
-	Serial.print(touchRead(T7));
-	Serial.println(" ");
 	int touchPattern = robot.getTouchPattern();
 	if (touchPattern != TOUCH_000) {
 		Serial.println(touchPattern);

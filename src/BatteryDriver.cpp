@@ -66,7 +66,6 @@ BatteryDriver::BatteryDriver()
 	lipo.setThreshold(5);
 
 	robot.battery.voltage = readBatteryVoltage();
-	Serial.println("reading");
 	takeSemaphore();
 	robot.battery.real_percentage = lipo.getSOC();
 	giveSemaphore();
