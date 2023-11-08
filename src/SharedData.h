@@ -374,6 +374,8 @@ public:
 	LedCtrl ledCtrl;
 	BatteryState battery;
 	TouchState touch;
+	String data[100];
+	int dataCounter = 0;
 
 	//Robot name variables
 	Names names;

@@ -42,53 +42,94 @@ Hexapod hexapod;
 void setup()
 {
 	Serial.begin(9600);
-	hexapod.init();
+	hexapod.init(ROBOT_USER_MODE);
 	robot.setLed(GREEN);
 	robot.setHeight(50);
 }
 
-Color clrArray[7] = {BLUE, YELLOW, GREEN, CYAN, PURPLE, RED, ORANGE};
-uint8_t clrCount = 0;
-
-void setLEDrandom()
-{
-	robot.setLedStatic(0, clrArray[random(0, 6)]);
-	robot.setLedStatic(1, clrArray[random(0, 6)]);
-	robot.setLedStatic(2, clrArray[random(0, 6)]);
-	robot.setLedStatic(3, clrArray[random(0, 6)]);
-	robot.setLedStatic(4, clrArray[random(0, 6)]);
-	robot.setLedStatic(5, clrArray[random(0, 6)]);
-	robot.setLedStatic(6, clrArray[random(0, 6)]);
-}
-
 void loop()
 {
-	int touchPattern = robot.getTouchPattern();
-	if (touchPattern != TOUCH_000) {
-		Serial.println(touchPattern);
+	if (robot.dataCounter) {
+		for (int i = 0; i < robot.dataCounter; i++) {
+			String d = robot.data[i];
+			if (d.length() < 5) {
+				continue;
+			}
+			Serial.println(d);
+			int lb = -1;
+			int rb = -1;
+			for (int j = 0; j < d.length(); j++) {
+				if (d[j] == '(') {
+					lb = j;
+				} else if (d[j] == ')') {
+					rb = j;
+				}
+			}
+			String vars[100];
+			String var = "";
+			int varBr = 0;
+			for (int j = lb + 1; j <= rb; j++) {
+				if (d[j] == ' ') {
+					continue;
+				}
+				if (d[j] == ',' || d[j] == ')') {
+					vars[varBr] = var;
+					Serial.println(var);
+					varBr++;
+					var = "";
+				} else {
+					var += d[j];
+				}
+			}
+			if (d.startsWith("robot.move")) {
+				Serial.println("robot.move");
+				userPresetInputData var0;
+				if (vars[0] == "FORWARD") {
+					var0 = FORWARD;
+				} else if (vars[0] == "BACKWARD") {
+					var0 = BACKWARD;
+				} else if (vars[0] == "LEFT") {
+					var0 = LEFT;
+				} else if (vars[0] == "RIGHT") {
+					var0 = RIGHT;
+				}
+				int var1 = vars[1].toInt();
+				robot.move(var0, var1);
+			} else if (d.startsWith("delay")) {
+				int var0 = vars[0].toInt();
+				delay(var0);
+			}
+		}
 	}
-	if (touchPattern == TOUCH_00X)
-	{
-		robot.writeExtraServo(-80);
-		setLEDrandom();
-	}
-	else if (touchPattern == TOUCH_X00)
-	{
-		robot.setLedStatic(clrArray[clrCount]);
-		clrCount = (clrCount + 1) % 7;
-		robot.writeExtraServo(80);
-	}
-	else if (touchPattern == TOUCH_0X0)
-	{
-		robot.exitUserMode();
-	}
-	else if (touchPattern == TOUCH_0XX)
-	{
-		robot.move(FORWARD,2000);
-	}
-	else if (touchPattern == TOUCH_XX0)
-	{
-		robot.move(BACKWARD,2000);
-	}
+	robot.dataCounter = 0;
 	delay(20);
+	return;
+	robot.setLedStatic(RED);
+	robot.move(FORWARD,2000);
+    delay(2000);
+	robot.move(FORWARD);
+    delay(7000);
+    robot.setLedStatic(GREEN);
+    delay(500);
+    robot.move(RIGHT);
+    delay(5000);
+    robot.setLedStatic(BLUE);
+    delay(500);
+    robot.move(BACKWARD);
+    delay(7000);
+    // STOP
+    robot.move(0, 0, 0);
+    delay(500);
+    robot.setLedStatic(CYAN);
+    robot.rotate(LEFT, 10000);
+    delay(10000);
+    // STOP
+    robot.move(0, 0, 0);
+    robot.setLedStatic(ORANGE);
+    delay(500);
+    robot.move(LEFT);
+    delay(5000);
 }
+
+
+    
