@@ -81,7 +81,10 @@ void loop()
 					var += d[j];
 				}
 			}
-			if (d.startsWith("robot.move")) {
+			if (d.startsWith("robot.move(0, 0, 0)")) {
+				Serial.println("robot.stop");
+				robot.move(0, 0, 0);
+			} else if (d.startsWith("robot.move")) {
 				Serial.println("robot.move");
 				userPresetInputData var0;
 				if (vars[0] == "FORWARD") {
@@ -98,6 +101,42 @@ void loop()
 			} else if (d.startsWith("delay")) {
 				int var0 = vars[0].toInt();
 				delay(var0);
+			}  else if (d.startsWith("robot.setLed")) {
+				Color var0;
+				if (vars[0] == "RED") {
+					var0 = RED;
+				} else if (vars[0] == "BLUE") {
+					var0 = BLUE;
+				} else if (vars[0] == "GREEN") {
+					var0 = GREEN;
+				} else if (vars[0] == "YELLOW") {
+					var0 = YELLOW;
+				} else if (vars[0] == "PURPLE") {
+					var0 = PURPLE;
+				} else if (vars[0] == "CYAN") {
+					var0 = CYAN;
+				} else if (vars[0] == "WHITE") {
+					var0 = WHITE;
+				} else if (vars[0] == "ORANGE") {
+					var0 = ORANGE;
+				} else if (vars[0] == "BLACK") {
+					var0 = BLACK;
+				}
+				robot.setLed(var0);
+			} else if (d.startsWith("robot.rotate")) {
+				Serial.println("robot.rotate");
+				userPresetInputData var0;
+				if (vars[0] == "FORWARD") {
+					var0 = FORWARD;
+				} else if (vars[0] == "BACKWARD") {
+					var0 = BACKWARD;
+				} else if (vars[0] == "LEFT") {
+					var0 = LEFT;
+				} else if (vars[0] == "RIGHT") {
+					var0 = RIGHT;
+				}
+				int var1 = vars[1].toInt();
+				robot.rotate(var0, var1);
 			}
 		}
 	}

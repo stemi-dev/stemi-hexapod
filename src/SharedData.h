@@ -120,7 +120,7 @@ For additional information please check http://www.stemi.education.
 #define LED_L3_ANGLE 120
 
 //movement parameters
-#define MOVE_SPEED 30 //%
+#define MOVE_SPEED 100 //%
 #define TURN_SPEED 50 //%
 #define TILT_AMMOUNT 70 //%
 #define STRETCH_AMMOUNT 70 //%
