@@ -2,10 +2,11 @@
 
 v1 and v2 on other branch
 
-## For shield master
+## For expansion board
 ```cpp
 #include "Hexapod.h"
-#include "Serial.h"
+#include "ExpansionDriver.h"
+
 SharedData robot;
 Hexapod hexapod;
 
@@ -13,13 +14,33 @@ void setup()
 {
 	Serial.begin(9600);
 	hexapod.init();
-	robot.setLed(RED);
+	robot.setLed(GREEN);
 	robot.setHeight(50);
 }
 
 void loop()
 {
-	checkSerial();
+	char msg[32];
+	ExpansionDriver expansionDriver;
+	delay(2000);
+	expansionDriver.init();
+	while (true)
+	{
+		for (int i = 0; i < 7; i++)
+		{
+			robot.setLedStatic(6, clrArray[i % 7]);
+			delay(500);
+		}
+		expansionDriver.readSHT();
+		delay(100);
+		Serial.println(expansionDriver.degC);
+		Serial.println(expansionDriver.humidity);
+		delay(1000);
+		expansionDriver.readDistance(1);
+		delay(100);
+		Serial.println(expansionDriver.distance_center);
+		delay(1000);
+	}
 }
 ```
 

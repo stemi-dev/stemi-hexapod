@@ -42,13 +42,22 @@ void errorDecoder(SHTC3_Status_TypeDef message)
 
 ExpansionDriver::ExpansionDriver()
 {
+	setChannel(3);
 	pinMode(25, OUTPUT);
+	digitalWrite(25, HIGH);
+}
+
+void ExpansionDriver::init()
+{
 	digitalWrite(25, LOW);
 	setChannel(0);
+	delay(100);
 	lightSensor.begin();
 	setChannel(2);
+	delay(100);
 	lightSensor.begin();
 	setChannel(3);
+	delay(100);
 	errorDecoder(mySHTC3.begin());
 	delay(500);
 	display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
@@ -73,12 +82,14 @@ int ExpansionDriver::readLux(int sensor_index)
 	if (sensor_index == 0)
 	{
 		setChannel(0);
+		delay(10);
 		left_light = lightSensor.getLux();
 		return left_light;
 	}
 	else
 	{
 		setChannel(2);
+		delay(10);
 		right_light = lightSensor.getLux();
 		return right_light;
 	}
