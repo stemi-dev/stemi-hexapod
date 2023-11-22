@@ -20,17 +20,12 @@ void setup()
 
 void loop()
 {
-	char msg[32];
 	ExpansionDriver expansionDriver;
 	delay(2000);
+	robot.setLedStatic(6, BLUE);
 	expansionDriver.init();
 	while (true)
 	{
-		for (int i = 0; i < 7; i++)
-		{
-			robot.setLedStatic(6, clrArray[i % 7]);
-			delay(500);
-		}
 		expansionDriver.readSHT();
 		delay(100);
 		Serial.println(expansionDriver.degC);
