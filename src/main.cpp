@@ -60,7 +60,6 @@ void setLEDrandom()
 
 void loop()
 {
-
 	int touchPattern = robot.getTouchPattern();
 	if (touchPattern == TOUCH_00X)
 	{
