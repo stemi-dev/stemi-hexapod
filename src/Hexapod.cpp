@@ -35,6 +35,7 @@ For additional information please check http://www.stemi.education.
 #include "Arduino.h"
 
 #include "Hexapod.h"
+#include "Version.h"
 
 void batteryDriver(void *sharedDataNew)
 {
@@ -50,6 +51,11 @@ void batteryDriver(void *sharedDataNew)
 	while (1)
 	{
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
+		if (isV1())
+		{
+			battery.calibrateBatteryPin();
+			robot.battery.store = 0;
+		}
 		battery.checkState();
 	}
 }
@@ -104,7 +110,6 @@ void servoDriver(void *sharedDataNew)
 			robot.servoCtrl.store = 0;
 		}
 		servoDriver.servoWrite();
-		servoDriver.analyseServo();
 	}
 }
 
@@ -117,7 +122,9 @@ void ledDriver(void *sharedDataNew)
 	xLastWakeTime = xTaskGetTickCount();
 
 	vTaskDelayUntil(&xLastWakeTime, 1000);
-	ledDriver.setBatteryPercentage(10);
+	if (isV2()) {
+		ledDriver.setBatteryPercentage(10);
+	}
 	while (1)
 	{
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
@@ -165,7 +172,7 @@ void btEngine(void *sharedDataNew)
 
 void touchDriver(void *sharedDataNew)
 {
-	Touch touch(25, 40, 5);
+	Touch touch(isV1() ? 50 : 25, 40, 5);
 
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = TASK_PERIOD_TOUCH;
@@ -241,23 +248,28 @@ Hexapod::Hexapod()
 void Hexapod::init(uint8_t mode)
 {
 	Wire.begin(23, 22);
-	pinMode(PIN_A, OUTPUT);
-	pinMode(PIN_B, OUTPUT);
-	pinMode(PIN_C, OUTPUT);
 	checkIsServerOn();
 	robot.setMode(mode);
 	ProductionVersion version;
 	version.check();
 	robot.loadName();
-	delay(200);
-	xTaskCreatePinnedToCore(btEngine, "btEngine", 4 * 4096, NULL, 2, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(batteryDriver, "batteryDriver", 4 * 1024, NULL, 5, NULL, ARDUINO_RUNNING_CORE); // temporarily high priority, just for the first run
+	delay(300);
+	if (isV2()) {
+		pinMode(PIN_A, OUTPUT);
+		pinMode(PIN_B, OUTPUT);
+		pinMode(PIN_C, OUTPUT);
+	}
+	delay(200);
+
+	xTaskCreatePinnedToCore(btEngine, "btEngine", 4 * 4096, NULL, 2, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(walkingEngine, "walkingEngine", 3 * 4096, NULL, 1, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(servoDriver, "servoDriver", 2 * 4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(ledDriver, "ledDriver", 1024, NULL, 5, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(robotEngine, "robotEngine", 2 * 1024, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(touchDriver, "touchDriver", 2 * 4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(dancingEngine, "dancingEngine", 2 * 4096, NULL, 4, NULL, ARDUINO_RUNNING_CORE);
+
 
 	delay(200);
 	std::string welcomeNote = "\nSTEMI Hexapod " + robot.name + " initialized :)\n\n";

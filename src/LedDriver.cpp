@@ -56,10 +56,14 @@ void LedDriver::setBatteryPercentage(int repeat) {
 	if (repeat <= 0) {
 		return;
 	}
+	Serial.println("repeat");
+	Serial.println(repeat);
 	float percentage = robot.getBatteryRealPercentage();
+	Serial.println("percentage");
 	Serial.println(percentage);
 	if (percentage == -1) {
-		setBatteryPercentage(repeat - 1);
+		delay(10);
+		return setBatteryPercentage(repeat - 1);
 	}
 	RgbColor charge_color = percentage < 20 ? RgbColor(255, 0, 0) : percentage < 70 ? RgbColor(0, 0, 255) : RgbColor(0, 255, 0);
 	for (int i = 0; i < 6; i++) {

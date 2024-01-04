@@ -36,6 +36,7 @@ For additional information please check http://www.stemi.education.
 #include "BatteryDriver.h"
 #include "SparkFun_MAX1704x_Fuel_Gauge_Arduino_Library.h"
 #include "Semaphore.h"
+#include "Version.h"
 
 SFE_MAX1704X lipo(MAX1704X_MAX17048);
 
@@ -47,6 +48,8 @@ static const adc_channel_t channel = ADC_CHANNEL_7; // GPIO34 if ADC1, GPIO14 if
 static const adc_atten_t atten = ADC_ATTEN_DB_0;
 static const adc_unit_t unit = ADC_UNIT_1;
 
+int hexapodVersion = 2;
+
 BatteryDriver::BatteryDriver()
 {
 
@@ -57,24 +60,36 @@ BatteryDriver::BatteryDriver()
 
 	delay(10);
 	lipo.enableDebugging();
+	int repeat = 1;
 	while (lipo.begin() == false) // Connect to the MAX17043 using the default wire port
 	{
+		repeat -= 1;
 		Serial.println(F("MAX1704X_MAX17048 not detected. Please check wiring. Freezing."));
 		delay(10);
+		if (repeat == 0) {
+			setVersion(1);
+			hexapodVersion = 1;
+			break;
+		}
 	}
-	lipo.quickStart();
-	lipo.setThreshold(5);
+	if (hexapodVersion == 2) {
+		lipo.quickStart();
+		lipo.setThreshold(5);
+	} else {
+		lipo.disableDebugging();
+	}
 
 	robot.battery.voltage = readBatteryVoltage();
-	takeSemaphore();
-	robot.battery.real_percentage = lipo.getSOC();
-	giveSemaphore();
-	for (uint8_t i = 0; i < 1; i++)
+	if (hexapodVersion == 2)
+	{
+		takeSemaphore();
+		robot.battery.real_percentage = lipo.getSOC();
+		giveSemaphore();
+	}
+	int repeatCounter = hexapodVersion == 2 ? 1 : 10;
+	for (uint8_t i = 0; i < repeatCounter; i++)
 	{
 		checkState();
-#ifdef DEBUG_VOLTAGES
-		Serial.println(robot.battery.voltage);
-#endif // DEBUG_VOLTAGES
 	}
 	// scheck bat state
 	if (robot.battery.voltage > MIN_TURN_ON_VOLTAGE)
@@ -90,9 +105,12 @@ BatteryDriver::BatteryDriver()
 void BatteryDriver::checkState()
 {
 	robot.battery.voltage = LPFvoltage(readBatteryVoltage());
-	takeSemaphore();
-	robot.battery.real_percentage = lipo.getSOC();
-	giveSemaphore();
+	if (hexapodVersion == 2)
+	{
+		takeSemaphore();
+		robot.battery.real_percentage = lipo.getSOC();
+		giveSemaphore();
+	}
 
 	switch (robot.battery.state)
 	{
@@ -163,10 +181,15 @@ void BatteryDriver::checkState()
 
 float BatteryDriver::readBatteryVoltage()
 {
-	takeSemaphore();
-	float voltage = lipo.getVoltage();
-	giveSemaphore();
-	return voltage;
+	if (hexapodVersion == 2)
+	{
+		takeSemaphore();
+		float voltage = lipo.getVoltage();
+		giveSemaphore();
+		return voltage;
+	}
+	float senVal = (float)(analogRead(BATTERY_STATUS_PIN));
+	return (-0.000000000023926 * pow(senVal, 3) + 0.000000094746 * pow(senVal, 2) + 0.00074539 * senVal + 0.14925) * 2.0 + batteryPinCalibrationValue;
 }
 
 float BatteryDriver::LPFvoltage(float valueNew)
@@ -177,7 +200,10 @@ float BatteryDriver::LPFvoltage(float valueNew)
 
 void BatteryDriver::calibrateBatteryPin()
 {
-	return;
+	if (hexapodVersion == 2)
+	{
+		return;
+	}
 	if ((millis() - timeStarted) < 8000)
 	{
 		batteryPinCalibrationValue = 0;

@@ -35,6 +35,7 @@ For additional information please check http://www.stemi.education.
 
 
 #include "RobotEngine.h"
+#include "Version.h"
 
 RobotEngine::RobotEngine()
 {
@@ -260,8 +261,9 @@ void RobotEngine::modesGO()
 
 void RobotEngine::calibrateBattery(uint8_t touchID, int8_t exitMode)
 {
-	// Calibration removed
-	return;
+	if (isV2()) {
+		return;
+	}
 #ifdef DEBUG
 	Serial.print("t: ");
 	Serial.print(touchID);
