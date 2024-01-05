@@ -56,11 +56,7 @@ void LedDriver::setBatteryPercentage(int repeat) {
 	if (repeat <= 0) {
 		return;
 	}
-	Serial.println("repeat");
-	Serial.println(repeat);
 	float percentage = robot.getBatteryRealPercentage();
-	Serial.println("percentage");
-	Serial.println(percentage);
 	if (percentage == -1) {
 		delay(10);
 		return setBatteryPercentage(repeat - 1);

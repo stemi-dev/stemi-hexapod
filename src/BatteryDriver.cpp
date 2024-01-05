@@ -220,8 +220,4 @@ void BatteryDriver::calibrateBatteryPin()
 		Serial.print(" measured: ");
 		Serial.println(readBatteryVoltage());
 	}
-	else
-	{
-		Serial.println("Battery Caliration Unavailable");
-	}
 }
