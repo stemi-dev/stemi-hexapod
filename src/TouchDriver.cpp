@@ -1,6 +1,7 @@
 
 #include "TouchDriver.h"
 #include "Arduino.h"
+#include "Version.h"
 
 Touch* Touch::instance;
 
@@ -10,13 +11,24 @@ Touch::Touch(int treshold, int interval, int value) {
 	cycle_counter_detect_interval = interval;
 	cycle_counter_detect_value = value;
 
-	touchAttachInterrupt(T4, Touch::touchInterruptCallbackT4, 22);
-	touchAttachInterrupt(T6, Touch::touchInterruptCallbackT6, 25);
-	touchAttachInterrupt(T7, Touch::touchInterruptCallbackT7, 25);
+	if (isV2()) {
+		touchAttachInterrupt(T4, Touch::touchInterruptCallbackT4, 22);
+		touchAttachInterrupt(T6, Touch::touchInterruptCallbackT6, 25);
+		touchAttachInterrupt(T7, Touch::touchInterruptCallbackT7, 25);
+	} else {
+		touchAttachInterrupt(T5, Touch::touchInterruptCallbackT5, touch_treshold);
+		touchAttachInterrupt(T6, Touch::touchInterruptCallbackT6, touch_treshold);
+		touchAttachInterrupt(T7, Touch::touchInterruptCallbackT7, touch_treshold);
+	}
 }
 
 void Touch::touchInterruptCallbackT4() {
 	instance->writeInterruptTime(T4);
+}
+
+
+void Touch::touchInterruptCallbackT5() {
+	instance->writeInterruptTime(T5);
 }
 
 void Touch::touchInterruptCallbackT6() {
@@ -34,8 +46,16 @@ void Touch::writeInterruptTime(int touch) {
 			interruptTime[1] = millis();
 			break;
 		}
-		case T6: {
+		case T5: {
 			interruptTime[0] = millis();
+			break;
+		}
+		case T6: {
+			if (isV1()) {
+				interruptTime[1] = millis();
+			} else {
+				interruptTime[0] = millis();
+			}
 			break;
 		}
 		case T7: {

@@ -34,6 +34,7 @@ For additional information please check http://www.stemi.education.
 */
 
 #include "Hexapod.h"
+#include "Version.h"
 
 SharedData robot;
 Hexapod hexapod;
