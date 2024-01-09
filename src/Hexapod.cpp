@@ -254,9 +254,10 @@ void Hexapod::init(uint8_t mode)
 	xTaskCreatePinnedToCore(servoDriver, "servoDriver", 2 * 4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(ledDriver, "ledDriver", 1024, NULL, 5, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(robotEngine, "robotEngine", 2 * 1024, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
-	xTaskCreatePinnedToCore(touchDriver, "touchDriver", 2 * 4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 	xTaskCreatePinnedToCore(dancingEngine, "dancingEngine", 2 * 4096, NULL, 4, NULL, ARDUINO_RUNNING_CORE);
-
+	
+	delay(500);
+	xTaskCreatePinnedToCore(touchDriver, "touchDriver", 2 * 4096, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
 
 	delay(200);
 	std::string welcomeNote = "\nSTEMI Hexapod " + robot.name + " initialized :)\n\n";
