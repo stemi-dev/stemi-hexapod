@@ -1,6 +1,6 @@
-# STEMI hexapod v3 #
+# STEMI Hexapod ALL VERSION Firmware #
 
-v1 and v2 on other branch
+Any version Firmware
 
 ## For expansion board
 ```cpp
