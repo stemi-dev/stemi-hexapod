@@ -189,19 +189,6 @@ void touchDriver(void *sharedDataNew)
 	}
 }
 
-void serialDriver(void *sharedDataNew)
-{
-	const TickType_t xFrequency = 10;
-	TickType_t xLastWakeTime;
-	xLastWakeTime = xTaskGetTickCount();
-
-	while (1)
-	{
-		vTaskDelayUntil(&xLastWakeTime, xFrequency);
-		checkSerial();
-	}
-}
-
 void dancingEngine(void *sharedDataNew)
 {
 	Dance dance;
